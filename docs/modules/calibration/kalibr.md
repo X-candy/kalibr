@@ -59,7 +59,7 @@ package "kalibr_errorterms" {
 @enduml
 ```
 
-### 主要组件划分
+### 2.1 主要组件划分
 1. **标定脚本层**：kalibr_calibrate_cameras、kalibr_calibrate_imu_camera
 2. **标定器层**：CameraCalibrator、IccCalibrator
 3. **数据管理层**：ObsDb、MulticamGraph
@@ -68,14 +68,14 @@ package "kalibr_errorterms" {
 6. **误差项层**：AccelerometerError、GyroscopeError、EuclideanError
 7. **导出层**：OKVIS、ROVIO、MSF、maplab 配置导出
 
-### 数据流走向
+### 2.2 数据流走向
 ```
 ROS bag → 数据集读取 → 目标提取 → 观测数据库 → 图优化 → 结果导出
             ↓
          IMU数据 → 预积分 → 误差项
 ```
 
-### 关键设计模式
+### 2.3 关键设计模式
 - **批处理优化**：Batch 非线性最小二乘
 - **图模型**：多相机观测图
 - **策略模式**：多种相机模型和畸变模型

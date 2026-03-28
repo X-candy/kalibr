@@ -50,19 +50,19 @@ package "sm_common" {
 @enduml
 ```
 
-### 主要组件划分
+### 2.1 主要组件划分
 1. **断言系统**：assert_macros.hpp + source_file_pos.hpp
 2. **ID 系统**：Id.hpp + hash_id.hpp
 3. **数学工具**：maths.hpp + numerical_comparisons.hpp
 4. **序列化辅助**：serialization_macros.hpp + typetraits.hpp
 5. **进度显示**：progress_info.hpp + progress_info.cpp
 
-### 数据流走向
+### 2.2 数据流走向
 ```
 用户代码 → 宏展开 → 编译时检查 → 运行时断言/异常 → 错误信息输出
 ```
 
-### 关键设计模式
+### 2.3 关键设计模式
 - **宏模板模式**：断言和 ID 定义使用宏生成代码
 - **SFINAE 模式**：序列化比较使用模板元编程选择方法
 - **单例模式**：VerboseChecker 使用单例

@@ -59,7 +59,7 @@ package "aslam_cameras" {
 @enduml
 ```
 
-### 主要组件划分
+### 2.1 主要组件划分
 1. **相机几何层**：CameraGeometryBase + CameraGeometry
 2. **投影模型层**：Pinhole、Omni、EUCm、DoubleSphere
 3. **畸变模型层**：RadialTangential、Equidistant、Fov、NoDistortion
@@ -68,14 +68,14 @@ package "aslam_cameras" {
 6. **检测器层**：GridDetector
 7. **工具层**：Triangulation、ImageMask
 
-### 数据流走向
+### 2.2 数据流走向
 ```
 3D点 → 归一化平面 → 畸变 → 投影 → 2D关键点
           ↑
       反投影（可选）
 ```
 
-### 关键设计模式
+### 2.3 关键设计模式
 - **策略模式**：CameraGeometryBase 定义统一接口，多种实现
 - **模板模式**：CameraGeometry 模板组合投影、畸变、快门
 - **工厂模式**：从配置创建相机几何

@@ -49,21 +49,21 @@ package "sm_kinematics" {
 @enduml
 ```
 
-### 主要组件划分
+### 2.1 主要组件划分
 1. **核心变换层**：Transformation + quaternion_algebra
 2. **旋转表示层**：RotationalKinematics 策略模式 + 多种实现
 3. **齐次坐标层**：HomogeneousPoint + homogeneous_coordinates
 4. **不确定性层**：UncertainTransformation + UncertainHomogeneousPoint + UncertainVector
 5. **工具算法层**：three_point_methods + rotations + transformations
 
-### 数据流走向
+### 2.2 数据流走向
 ```
 旋转参数 → 四元数/旋转矩阵 → 变换组合 → 点变换 → 结果输出
           ↓
       不确定性传播
 ```
 
-### 关键设计模式
+### 2.3 关键设计模式
 - **策略模式**：RotationalKinematics 抽象基类，多种旋转表示
 - **组合模式**：Transformation 操作符重载实现变换组合
 - **值语义**：Transformation 等类设计为值类型，支持拷贝
