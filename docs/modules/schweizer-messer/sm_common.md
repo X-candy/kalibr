@@ -4,7 +4,24 @@
 
 ---
 
-## 1. 🏗️ 架构设计
+## 1. 📋 功能说明
+
+### 1.1 定位
+sm_common 是 Schweizer-Messer 库的核心基础模块，提供了通用的工具类、宏定义和辅助功能。它是其他所有 sm_* 模块的基础，不依赖于其他 sm_* 模块。
+
+### 1.2 核心能力
+- **断言和异常宏**：提供强大的断言机制和异常定义工具
+- **类型安全的 ID**：强类型的 ID 类，避免 ID 混淆
+- **数学工具**：二次方程求解、符号函数等基础数学功能
+- **序列化辅助**：用于序列化的比较宏和工具
+- **进度显示**：简单的进度条显示功能
+- **数值比较**：浮点数相对误差比较
+- **128位 Hash ID**：用于无序容器的高性能键
+- **对齐内存分配**：Eigen 库所需的对齐内存分配工具
+
+---
+
+## 2. 🏗️ 架构设计
 
 sm_common 采用纯头文件加少量实现文件的结构。大部分功能通过头文件提供，只有 `progress_info.cpp` 包含实际的实现代码。
 
@@ -53,9 +70,9 @@ package "sm_common" {
 
 ---
 
-## 2. 🔑 关键方法
+## 3. 🔑 关键方法
 
-### 2.1 二次方程求解
+### 3.1 二次方程求解
 ```cpp
 std::pair<double, double> solveQuadratic(double a, double b, double c);
 ```
@@ -94,7 +111,7 @@ stop
 
 ---
 
-### 2.2 浮点数相对误差比较
+### 3.2 浮点数相对误差比较
 ```cpp
 template<typename ValueType_>
 static bool approximatelyEqual(const ValueType_ a, const ValueType_ b, ValueType_ epsilon);
@@ -135,7 +152,7 @@ stop
 
 ---
 
-### 2.3 HashId 随机生成
+### 3.3 HashId 随机生成
 ```cpp
 static HashId random();
 void randomize();
@@ -167,7 +184,7 @@ stop
 
 ---
 
-### 2.4 序列化比较 SFINAE 选择
+### 3.4 序列化比较 SFINAE 选择
 ```cpp
 SM_CHECKSAME(THIS, OTHER)
 SM_CHECKSAME(THIS, OTHER, VERBOSE)
@@ -206,9 +223,9 @@ stop
 
 ---
 
-## 3. 🔌 外部接口
+## 4. 🔌 对外接口
 
-### 3.1 主要类
+### 4.1 主要类
 
 #### `Id`
 **用途**：类型安全的 ID 基类，用于创建强类型的 ID
@@ -289,7 +306,7 @@ stop
 
 ---
 
-### 3.2 主要宏
+### 4.2 主要宏
 
 #### 异常定义宏
 ```cpp
@@ -419,7 +436,7 @@ SET_CHECKSAME_VERBOSITY(verbose)
 
 ---
 
-### 3.3 主要函数
+### 4.3 主要函数
 
 #### 二次方程求解
 ```cpp
@@ -528,7 +545,7 @@ static bool definitelyLessThan(
 
 ---
 
-### 3.4 核心数据结构
+### 4.4 核心数据结构
 
 #### Id 内部存储
 ```cpp
@@ -557,23 +574,6 @@ struct Aligned {
 };
 ```
 **用途**：为 STL 容器提供 Eigen 兼容的对齐分配器
-
----
-
-## 4. 📋 功能说明
-
-### 4.1 定位
-sm_common 是 Schweizer-Messer 库的核心基础模块，提供了通用的工具类、宏定义和辅助功能。它是其他所有 sm_* 模块的基础，不依赖于其他 sm_* 模块。
-
-### 4.2 核心能力
-- **断言和异常宏**：提供强大的断言机制和异常定义工具
-- **类型安全的 ID**：强类型的 ID 类，避免 ID 混淆
-- **数学工具**：二次方程求解、符号函数等基础数学功能
-- **序列化辅助**：用于序列化的比较宏和工具
-- **进度显示**：简单的进度条显示功能
-- **数值比较**：浮点数相对误差比较
-- **128位 Hash ID**：用于无序容器的高性能键
-- **对齐内存分配**：Eigen 库所需的对齐内存分配工具
 
 ---
 
@@ -801,4 +801,3 @@ SM_CHECKMEMBERSSAME(b, value_);
 | `include/sm/round.hpp` | 舍入工具 | - |
 | `include/sm/string_routines.hpp` | 字符串工具 | - |
 | `include/sm/is_binary_equal.hpp` | 二进制比较 | - |
-

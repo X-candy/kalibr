@@ -4,7 +4,22 @@
 
 ---
 
-## 1. 🏗️ 架构设计
+## 1. 📋 功能说明
+
+### 1.1 定位
+sm_eigen 模块为 Eigen3 线性代数库提供了扩展功能，包括序列化、随机数生成、数值微分、矩阵平方根等实用工具。
+
+### 1.2 核心能力
+- **Eigen 矩阵序列化**：使用 Boost.Serialization 序列化/反序列化 Eigen 矩阵
+- **随机向量生成**：生成正态分布的随机向量
+- **矩阵平方根**：计算矩阵的平方根
+- **数值微分**：数值雅可比矩阵计算
+- **属性树集成**：与 sm_property_tree 集成
+- **Eigen 断言宏**：Eigen 专用的断言工具
+
+---
+
+## 2. 🏗️ 架构设计
 
 sm_eigen 提供 Eigen3 线性代数库的扩展功能，主要是头文件库。
 
@@ -37,9 +52,9 @@ package "sm_eigen" {
 
 ---
 
-## 2. 🔑 关键方法
+## 3. 🔑 关键方法
 
-### 2.1 随机向量生成
+### 3.1 随机向量生成
 ```cpp
 Eigen::VectorXd randn(unsigned dim);
 ```
@@ -49,7 +64,7 @@ Eigen::VectorXd randn(unsigned dim);
 
 ---
 
-### 2.2 矩阵平方根
+### 3.2 矩阵平方根
 ```cpp
 void matrixSqrt(const Eigen::MatrixXd & A,
                 Eigen::MatrixXd & sqrtA,
@@ -61,7 +76,7 @@ void matrixSqrt(const Eigen::MatrixXd & A,
 
 ---
 
-### 2.3 数值微分
+### 3.3 数值微分
 ```cpp
 template<typename Functor>
 class NumericalDiff {
@@ -76,9 +91,9 @@ public:
 
 ---
 
-## 3. 🔌 外部接口
+## 4. 🔌 对外接口
 
-### 3.1 主要函数
+### 4.1 主要函数
 ```cpp
 Eigen::VectorXd randn(unsigned dim);
 ```
@@ -92,21 +107,6 @@ Eigen::VectorXd randn(unsigned dim);
 输出:
   VectorXd: dim维随机向量，元素~N(0,1)
 ```
-
----
-
-## 4. 📋 功能说明
-
-### 4.1 定位
-sm_eigen 模块为 Eigen3 线性代数库提供了扩展功能，包括序列化、随机数生成、数值微分、矩阵平方根等实用工具。
-
-### 4.2 核心能力
-- **Eigen 矩阵序列化**：使用 Boost.Serialization 序列化/反序列化 Eigen 矩阵
-- **随机向量生成**：生成正态分布的随机向量
-- **矩阵平方根**：计算矩阵的平方根
-- **数值微分**：数值雅可比矩阵计算
-- **属性树集成**：与 sm_property_tree 集成
-- **Eigen 断言宏**：Eigen 专用的断言工具
 
 ---
 
@@ -163,4 +163,3 @@ Eigen::VectorXd vec = sm::eigen::randn(3);
 | `include/sm/eigen/property_tree.hpp` | 属性树集成 |
 | `include/sm/eigen/assert_macros.hpp` | Eigen 断言 |
 | `include/sm/eigen/traits.hpp` | Eigen 特征 |
-

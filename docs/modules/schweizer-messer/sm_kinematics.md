@@ -4,7 +4,22 @@
 
 ---
 
-## 1. 🏗️ 架构设计
+## 1. 📋 功能说明
+
+### 1.1 定位
+sm_kinematics 是 Schweizer-Messer 库的核心运动学模块，提供了完整的 3D 几何变换和旋转表示功能。它是相机标定、状态估计等应用的几何基础。
+
+### 1.2 核心能力
+- **多种旋转表示**：四元数、旋转矩阵、欧拉角（ZYX、YawPitchRoll、ZXY）、旋转向量、Euler-Rodriguez 参数
+- **刚体变换**：6 自由度变换表示，支持组合和逆
+- **不确定性处理**：带不确定性的变换和点
+- **齐次坐标**：齐次点表示和操作
+- **插值**：变换和旋转的球面线性插值
+- **三点法**：使用三点计算变换
+
+---
+
+## 2. 🏗️ 架构设计
 
 sm_kinematics 采用分层设计，以 Transformation 类为核心，结合多种旋转表示和不确定性处理。
 
@@ -56,9 +71,9 @@ package "sm_kinematics" {
 
 ---
 
-## 2. 🔑 关键方法
+## 3. 🔑 关键方法
 
-### 2.1 四元数代数
+### 3.1 四元数代数
 
 ```cpp
 Eigen::Matrix3d quat2r(Eigen::Vector4d const & q);
@@ -100,7 +115,7 @@ stop
 
 ---
 
-### 2.2 Transformation 变换操作
+### 3.2 Transformation 变换操作
 
 ```cpp
 Transformation();
@@ -143,7 +158,7 @@ stop
 
 ---
 
-### 2.3 三点法计算变换
+### 3.3 三点法计算变换
 
 ```cpp
 Transformation three_point_method(
@@ -157,7 +172,7 @@ Transformation three_point_method(
 
 ---
 
-### 2.4 变换插值
+### 3.4 变换插值
 
 ```cpp
 Transformation interpolateTransformations(
@@ -177,9 +192,9 @@ Transformation slerpTransformations(
 
 ---
 
-## 3. 🔌 外部接口
+## 4. 🔌 对外接口
 
-### 3.1 主要类
+### 4.1 主要类
 
 #### `Transformation`
 **用途**：表示 3D 刚体变换 \( T_{ab} \)，将点从坐标系 b 变换到坐标系 a
@@ -267,7 +282,7 @@ Transformation slerpTransformations(
 
 ---
 
-### 3.2 主要函数
+### 4.2 主要函数
 
 #### 四元数代数函数
 ```cpp
@@ -362,7 +377,7 @@ Transformation three_point_method(
 
 ---
 
-### 3.3 核心数据结构
+### 4.3 核心数据结构
 
 #### Transformation 内部存储
 ```cpp
@@ -380,21 +395,6 @@ protected:
   x,y,z: 虚部
 满足: w² + x² + y² + z² = 1
 ```
-
----
-
-## 4. 📋 功能说明
-
-### 4.1 定位
-sm_kinematics 是 Schweizer-Messer 库的核心运动学模块，提供了完整的 3D 几何变换和旋转表示功能。它是相机标定、状态估计等应用的几何基础。
-
-### 4.2 核心能力
-- **多种旋转表示**：四元数、旋转矩阵、欧拉角（ZYX、YawPitchRoll、ZXY）、旋转向量、Euler-Rodriguez 参数
-- **刚体变换**：6 自由度变换表示，支持组合和逆
-- **不确定性处理**：带不确定性的变换和点
-- **齐次坐标**：齐次点表示和操作
-- **插值**：变换和旋转的球面线性插值
-- **三点法**：使用三点计算变换
 
 ---
 
@@ -575,4 +575,3 @@ Eigen::Vector3d v_rot = sm::kinematics::quatRotate(q, v);
 | `src/transformations.cpp` | 变换操作实现 |
 | `include/sm/kinematics/homogeneous_coordinates.hpp` | 齐次坐标工具 |
 | `src/homogeneous_coordinates.cpp` | 齐次坐标实现 |
-

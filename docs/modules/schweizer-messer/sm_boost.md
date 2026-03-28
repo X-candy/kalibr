@@ -4,7 +4,20 @@
 
 ---
 
-## 1. 🏗️ 架构设计
+## 1. 📋 功能说明
+
+### 1.1 定位
+sm_boost 模块提供了对 Boost 库的扩展和封装，包括可移植二进制归档、作业队列和其他 Boost 相关的工具。
+
+### 1.2 核心能力
+- **可移植二进制归档**：跨平台的二进制序列化
+- **作业队列**：线程安全的任务队列
+- **Boost 序列化扩展**：增强的序列化功能
+- **时间工具**：Boost.DateTime 的辅助工具
+
+---
+
+## 2. 🏗️ 架构设计
 
 sm_boost 提供 Boost 库的扩展和封装，主要是可移植二进制归档和作业队列。
 
@@ -30,9 +43,9 @@ package "sm_boost" {
 
 ---
 
-## 2. 🔑 关键方法
+## 3. 🔑 关键方法
 
-### 2.1 作业队列
+### 3.1 作业队列
 ```cpp
 class JobQueue {
 public:
@@ -48,7 +61,7 @@ public:
 
 ---
 
-### 2.2 可移植二进制归档
+### 3.2 可移植二进制归档
 ```cpp
 boost::archive::portable_binary_iarchive
 boost::archive::portable_binary_oarchive
@@ -59,9 +72,9 @@ boost::archive::portable_binary_oarchive
 
 ---
 
-## 3. 🔌 外部接口
+## 4. 🔌 对外接口
 
-### 3.1 JobQueue 类
+### 4.1 JobQueue 类
 ```cpp
 JobQueue::JobQueue(int numThreads);
 void JobQueue::schedule(boost::function<void()> job);
@@ -79,19 +92,6 @@ void JobQueue::stopProcessingJobs();
 输出:
   - 无返回值，异步执行
 ```
-
----
-
-## 4. 📋 功能说明
-
-### 4.1 定位
-sm_boost 模块提供了对 Boost 库的扩展和封装，包括可移植二进制归档、作业队列和其他 Boost 相关的工具。
-
-### 4.2 核心能力
-- **可移植二进制归档**：跨平台的二进制序列化
-- **作业队列**：线程安全的任务队列
-- **Boost 序列化扩展**：增强的序列化功能
-- **时间工具**：Boost.DateTime 的辅助工具
 
 ---
 
@@ -144,4 +144,3 @@ queue.waitForEmptyQueue();
 | `include/sm/boost/serialization.hpp` | 序列化工具 |
 | `include/sm/boost/ptime.hpp` | 时间工具 |
 | `include/sm/boost/null_deleter.hpp` | 空删除器 |
-
