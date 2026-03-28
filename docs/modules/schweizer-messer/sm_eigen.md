@@ -50,6 +50,18 @@ package "sm_eigen" {
 5. **属性树集成**：与 sm_property_tree 集成
 6. **断言宏**：Eigen 专用断言
 
+### 2.2 数据流走向
+```
+Eigen 矩阵 → 序列化 → Boost 归档 → 存储/传输
+                    ↓
+              反序列化 → Eigen 矩阵
+```
+
+### 2.3 关键设计模式
+- **模板特化**：为不同 Eigen 类型提供序列化特化
+- **SFINAE**：编译时类型检查
+- **策略模式**：数值微分的不同步长策略
+
 ---
 
 ## 3. 🔑 关键方法
@@ -61,6 +73,22 @@ Eigen::VectorXd randn(unsigned dim);
 **原理**：生成标准正态分布的随机向量
 
 **实现位置**：`include/sm/eigen/random.hpp` + `src/random.cpp`
+
+**复杂度**：O(n)，n 为向量维度
+
+```plantuml
+@startuml
+start
+:接收维度 dim;
+:创建 VectorXd(dim);
+for (i = 0; i < dim; i++)
+    :生成 N(0,1) 随机数;
+    :赋值给 vec[i];
+endforeach
+:返回 vec;
+stop
+@enduml
+```
 
 ---
 
@@ -94,10 +122,17 @@ public:
 ## 4. 🔌 对外接口
 
 ### 4.1 主要函数
+
+#### 4.1.1 随机向量生成
 ```cpp
 Eigen::VectorXd randn(unsigned dim);
 ```
 **用途**：生成指定维度的正态分布随机向量
+
+**参数**：
+- `dim` — 向量维度
+
+**返回值**：dim 维随机向量，每个元素 ~ N(0,1)
 
 **输入输出接口定义**：
 ```
@@ -106,6 +141,42 @@ Eigen::VectorXd randn(unsigned dim);
 
 输出:
   VectorXd: dim维随机向量，元素~N(0,1)
+```
+
+---
+
+#### 4.1.2 矩阵平方根
+```cpp
+void matrixSqrt(const Eigen::MatrixXd & A,
+                Eigen::MatrixXd & sqrtA,
+                Eigen::MatrixXd & sqrtAinv);
+```
+**用途**：计算矩阵的平方根及其逆
+
+**参数**：
+- `A` — 输入矩阵
+- `sqrtA` — 输出矩阵平方根
+- `sqrtAinv` — 输出矩阵平方根的逆
+
+---
+
+### 4.2 主要类
+
+#### 4.2.1 `NumericalDiff<Functor>`
+**用途**：数值雅可比矩阵计算
+
+**关键方法**：
+- `NumericalDiff(Functor & functor, double eps = 1e-6)` — 构造函数
+- `estimateJacobian(const Eigen::VectorXd & x, Eigen::MatrixXd & J)` — 估计雅可比
+
+---
+
+### 4.3 核心数据结构
+
+#### 4.3.1 序列化支持
+```cpp
+// 自动为 Eigen::Matrix 提供 Boost.Serialization 支持
+// 支持: MatrixXd, VectorXd, Matrix3d, Vector3d 等
 ```
 
 ---
@@ -127,6 +198,7 @@ Eigen::VectorXd randn(unsigned dim);
 ```cpp
 #include <sm/eigen/serialization.hpp>
 #include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 #include <sstream>
 
 // 序列化
@@ -134,6 +206,11 @@ Eigen::Matrix3d mat = Eigen::Matrix3d::Random();
 std::stringstream ss;
 boost::archive::text_oarchive oa(ss);
 oa << mat;
+
+// 反序列化
+Eigen::Matrix3d mat2;
+boost::archive::text_iarchive ia(ss);
+ia >> mat2;
 ```
 
 ### 6.2 生成随机向量
@@ -141,6 +218,47 @@ oa << mat;
 #include <sm/eigen/random.hpp>
 
 Eigen::VectorXd vec = sm::eigen::randn(3);
+// vec = [N(0,1), N(0,1), N(0,1)]
+```
+
+### 6.3 数值雅可比计算
+```cpp
+#include <sm/eigen/NumericalDiff.hpp>
+
+// 定义函数
+struct MyFunctor {
+    Eigen::VectorXd operator()(const Eigen::VectorXd & x) const {
+        Eigen::VectorXd y(2);
+        y(0) = x(0) * x(0);
+        y(1) = x(1) * x(1);
+        return y;
+    }
+};
+
+// 计算数值雅可比
+MyFunctor f;
+sm::eigen::NumericalDiff<MyFunctor> numDiff(f);
+
+Eigen::VectorXd x(2);
+x << 1.0, 2.0;
+
+Eigen::MatrixXd J;
+numDiff.estimateJacobian(x, J);
+// J ≈ [[2, 0], [0, 4]]
+```
+
+### 6.4 矩阵平方根
+```cpp
+#include <sm/eigen/matrix_sqrt.hpp>
+
+Eigen::MatrixXd A(2, 2);
+A << 4, 0,
+     0, 9;
+
+Eigen::MatrixXd sqrtA, sqrtAinv;
+sm::eigen::matrixSqrt(A, sqrtA, sqrtAinv);
+// sqrtA = [[2, 0], [0, 3]]
+// sqrtAinv = [[0.5, 0], [0, 1/3]]
 ```
 
 ---
