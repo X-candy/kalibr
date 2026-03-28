@@ -208,7 +208,7 @@ public:
 
 ### 4.1 主要类
 
-#### `CameraGeometryBase`
+#### 4.1.1 `CameraGeometryBase`
 **用途**：相机几何抽象基类，定义统一接口
 
 **关键方法**：
@@ -233,7 +233,7 @@ public:
 
 ---
 
-#### `PinholeProjection<DISTORTION_T>`
+#### 4.1.2 `PinholeProjection<DISTORTION_T>`
 **用途**：针孔投影模型，支持任意畸变模型
 
 **关键方法**：
@@ -255,7 +255,7 @@ public:
 
 ---
 
-#### `RadialTangentialDistortion`
+#### 4.1.3 `RadialTangentialDistortion`
 **用途**：径向切向畸变模型（4参数）
 
 **关键方法**：
@@ -274,7 +274,7 @@ public:
 
 ---
 
-#### `GridDetector`
+#### 4.1.4 `GridDetector`
 **用途**：检测图像中的标定目标
 
 **关键方法**：

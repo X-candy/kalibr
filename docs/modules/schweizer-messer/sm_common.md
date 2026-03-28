@@ -227,7 +227,7 @@ stop
 
 ### 4.1 主要类
 
-#### `Id`
+#### 4.1.1 `Id`
 **用途**：类型安全的 ID 基类，用于创建强类型的 ID
 
 **关键方法**：
@@ -257,7 +257,7 @@ stop
 
 ---
 
-#### `HashId`
+#### 4.1.2 `HashId`
 **用途**：128 位哈希 ID，可用作无序容器的键
 
 **关键方法**：
@@ -285,7 +285,7 @@ stop
 
 ---
 
-#### `ProgressInfo`
+#### 4.1.3 `ProgressInfo`
 **用途**：显示进度信息的工具类
 
 **关键静态方法**：
@@ -308,7 +308,7 @@ stop
 
 ### 4.2 主要宏
 
-#### 异常定义宏
+#### 4.2.1 异常定义宏
 ```cpp
 SM_DEFINE_EXCEPTION(exceptionName, exceptionParent)
 ```
@@ -326,7 +326,7 @@ SM_DEFINE_EXCEPTION(MyException, std::runtime_error);
 
 ---
 
-#### ID 定义宏
+#### 4.2.2 ID 定义宏
 ```cpp
 SM_DEFINE_ID(IdTypeName)
 ```
@@ -341,7 +341,7 @@ SM_DEFINE_ID(EdgeId);
 // VertexId 和 EdgeId 不能混用，类型安全
 ```
 
-#### ID Hash 定义宏
+#### 4.2.3 ID Hash 定义宏
 ```cpp
 SM_DEFINE_ID_HASH(FullyQualifiedIdTypeName)
 ```
@@ -351,7 +351,7 @@ SM_DEFINE_ID_HASH(FullyQualifiedIdTypeName)
 
 ---
 
-#### 断言宏系列
+#### 4.2.4 断言宏系列
 
 **真值断言**：
 ```cpp
@@ -408,7 +408,7 @@ SM_ASSERT_TRUE_DBG(exceptionType, condition, message)
 
 ---
 
-#### 序列化比较宏
+#### 4.2.5 序列化比较宏
 ```cpp
 SM_CHECKSAME(THIS, OTHER)
 SM_CHECKSAME(THIS, OTHER, VERBOSE)
@@ -438,7 +438,7 @@ SET_CHECKSAME_VERBOSITY(verbose)
 
 ### 4.3 主要函数
 
-#### 二次方程求解
+#### 4.3.1 二次方程求解
 ```cpp
 std::pair<double, double> solveQuadratic(double a, double b, double c);
 ```
@@ -472,7 +472,7 @@ std::pair<double, double> solveQuadratic(double a, double b, double c);
 
 ---
 
-#### 符号函数
+#### 4.3.2 符号函数
 ```cpp
 template <typename T> int sgn(T val);
 ```
@@ -497,7 +497,7 @@ template <typename T> int sgn(T val);
 
 ---
 
-#### 浮点数比较函数
+#### 4.3.3 浮点数比较函数
 ```cpp
 template<typename ValueType_>
 static bool approximatelyEqual(
@@ -547,7 +547,7 @@ static bool definitelyLessThan(
 
 ### 4.4 核心数据结构
 
-#### Id 内部存储
+#### 4.4.1 Id 内部存储
 ```cpp
 typedef boost::uint64_t id_type;
 
@@ -557,7 +557,7 @@ protected:
 };
 ```
 
-#### HashId 内部存储
+#### 4.4.2 HashId 内部存储
 ```cpp
 union HashVal {
     unsigned char c[16];    // 字节访问
@@ -566,7 +566,7 @@ union HashVal {
 HashVal val_;
 ```
 
-#### 对齐内存分配辅助
+#### 4.4.3 对齐内存分配辅助
 ```cpp
 template<template<typename, typename> class Container, typename Type>
 struct Aligned {

@@ -190,7 +190,7 @@ class MulticamCalibrationGraph:
 
 ### 4.1 主要命令行工具
 
-#### `kalibr_calibrate_cameras`
+#### 4.1.1 `kalibr_calibrate_cameras`
 **用途**：多相机内参和外参标定
 
 **关键参数**：
@@ -221,7 +221,7 @@ class MulticamCalibrationGraph:
 
 ---
 
-#### `kalibr_calibrate_imu_camera`
+#### 4.1.2 `kalibr_calibrate_imu_camera`
 **用途**：相机-IMU 时空联合标定
 
 **关键参数**：
@@ -233,14 +233,14 @@ class MulticamCalibrationGraph:
 
 ---
 
-#### `kalibr_calibrate_rs_cameras`
+#### 4.1.3 `kalibr_calibrate_rs_cameras`
 **用途**：卷帘快门相机标定
 
 ---
 
 ### 4.2 主要 Python 类
 
-#### `CameraCalibrator`
+#### 4.2.1 `CameraCalibrator`
 **用途**：多相机标定的核心类
 
 **关键方法**：
@@ -250,7 +250,7 @@ class MulticamCalibrationGraph:
 
 ---
 
-#### `ObservationDatabase`
+#### 4.2.3 `ObservationDatabase`
 **用途**：管理多相机观测
 
 **关键方法**：
@@ -261,7 +261,7 @@ class MulticamCalibrationGraph:
 
 ---
 
-#### `MulticamCalibrationGraph`
+#### 4.2.4 `MulticamCalibrationGraph`
 **用途**：多相机观测图
 
 **关键方法**：
@@ -274,7 +274,7 @@ class MulticamCalibrationGraph:
 
 ### 4.3 C++ 误差项
 
-#### `EuclideanError`
+#### 4.3.3 `EuclideanError`
 ```cpp
 class EuclideanError : public aslam::backend::ErrorTermFs<2> {
 public:
@@ -286,7 +286,7 @@ public:
 
 ---
 
-#### `AccelerometerError`
+#### 4.3.1 `AccelerometerError`
 ```cpp
 class AccelerometerError : public aslam::backend::ErrorTermFs<3> {
 public:
@@ -298,7 +298,7 @@ public:
 
 ---
 
-#### `GyroscopeError`
+#### 4.3.2 `GyroscopeError`
 ```cpp
 class GyroscopeError : public aslam::backend::ErrorTermFs<3> {
 public:

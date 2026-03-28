@@ -196,7 +196,7 @@ Transformation slerpTransformations(
 
 ### 4.1 主要类
 
-#### `Transformation`
+#### 4.1.1 `Transformation`
 **用途**：表示 3D 刚体变换 \( T_{ab} \)，将点从坐标系 b 变换到坐标系 a
 
 **关键方法**：
@@ -235,7 +235,7 @@ Transformation slerpTransformations(
 
 ---
 
-#### `HomogeneousPoint`
+#### 4.1.2 `HomogeneousPoint`
 **用途**：齐次坐标表示的 3D 点
 
 **关键方法**：
@@ -247,7 +247,7 @@ Transformation slerpTransformations(
 
 ---
 
-#### `RotationalKinematics`（抽象基类）
+#### 4.1.3 `RotationalKinematics`（抽象基类）
 **用途**：旋转表示的抽象接口
 
 **关键方法**（纯虚）：
@@ -264,7 +264,7 @@ Transformation slerpTransformations(
 
 ---
 
-#### `UncertainTransformation`
+#### 4.1.4 `UncertainTransformation`
 **用途**：带不确定性的刚体变换
 
 **关键方法**：
@@ -273,7 +273,7 @@ Transformation slerpTransformations(
 
 ---
 
-#### `UncertainHomogeneousPoint`
+#### 4.1.5 `UncertainHomogeneousPoint`
 **用途**：带不确定性的齐次点
 
 **关键方法**：
@@ -284,7 +284,7 @@ Transformation slerpTransformations(
 
 ### 4.2 主要函数
 
-#### 四元数代数函数
+#### 4.2.1 四元数代数函数
 ```cpp
 Eigen::Matrix3d quat2r(Eigen::Vector4d const & q);
 Eigen::Vector4d r2quat(Eigen::Matrix3d const & C);
@@ -328,7 +328,7 @@ Eigen::VectorXd lerp(const Eigen::VectorXd & p0, const Eigen::VectorXd & p1, dou
 
 ---
 
-#### 变换操作函数
+#### 4.2.2 变换操作函数
 ```cpp
 Transformation interpolateTransformations(
     const Transformation & T0, double s0,
@@ -356,7 +356,7 @@ Transformation slerpTransformations(
 
 ---
 
-#### 三点法函数
+#### 4.2.3 三点法函数
 ```cpp
 Transformation three_point_method(
     const std::vector<Eigen::Vector3d> & p_a,
@@ -379,7 +379,7 @@ Transformation three_point_method(
 
 ### 4.3 核心数据结构
 
-#### Transformation 内部存储
+#### 4.3.1 Transformation 内部存储
 ```cpp
 class Transformation {
 protected:
@@ -388,7 +388,7 @@ protected:
 };
 ```
 
-#### 四元数约定
+#### 4.3.2 四元数约定
 ```
 四元数格式: q = [w, x, y, z]
   w: 实部

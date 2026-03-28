@@ -74,7 +74,7 @@ boost::archive::portable_binary_oarchive
 
 ## 4. 🔌 对外接口
 
-### 4.1 JobQueue 类
+### 4.1 主要类
 ```cpp
 JobQueue::JobQueue(int numThreads);
 void JobQueue::schedule(boost::function<void()> job);
