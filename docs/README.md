@@ -27,28 +27,18 @@ docs/
     │   └── python_module.md
     ├── aslam_cv/                      # 计算机视觉模块集群
     │   ├── README.md                  # aslam_cv 模块总览
-    │   ├── aslam_cameras.md
-    │   ├── aslam_cameras_april.md
-    │   ├── aslam_cv_backend.md
-    │   ├── aslam_cv_error_terms.md
-    │   ├── aslam_cv_python.md
-    │   ├── aslam_cv_backend_python.md
-    │   ├── aslam_cv_serialization.md
-    │   ├── aslam_imgproc.md
-    │   └── aslam_time.md
+    │   └── aslam_cameras.md
+    ├── aslam_incremental_calibration/ # 增量式校准模块集群
+    │   └── README.md
+    ├── aslam_nonparametric_estimation/ # 非参数估计模块集群
+    │   └── README.md
+    ├── aslam_offline_calibration/      # 离线校准模块集群
+    │   └── README.md
     ├── calibration/                   # 标定核心模块集群
     │   ├── README.md                  # 标定模块总览
-    │   ├── incremental_calibration.md
-    │   ├── aslam_splines.md
-    │   ├── bsplines.md
-    │   ├── ethz_apriltag2.md
     │   └── kalibr.md
     ├── optimizer/                     # 优化器模块集群
-    │   ├── README.md                  # 优化器模块总览
-    │   ├── aslam_backend.md
-    │   ├── aslam_backend_expressions.md
-    │   ├── aslam_backend_python.md
-    │   └── sparse_block_matrix.md
+    │   └── README.md
     └── infrastructure/                # 基础设施模块集群
         ├── README.md                  # 基础设施总览
         ├── catkin_simple.md
@@ -97,20 +87,48 @@ ASL (Autonomous Systems Lab) 计算机视觉基础设施。
 
 ---
 
-### 3. Calibration — 标定核心模块
+### 3. aslam_incremental_calibration — 增量式校准库
+支持在线和增量式传感器校准。
+
+| 模块 | 功能定位 |
+|------|----------|
+| incremental_calibration | 增量式校准核心算法 |
+| incremental_calibration_python | Python 语言绑定 |
+
+---
+
+### 4. aslam_nonparametric_estimation — 非参数估计库
+提供 B 样条等非参数建模功能。
+
+| 模块 | 功能定位 |
+|------|----------|
+| aslam_splines | ASL 样条库 |
+| aslam_splines_python | ASL 样条 Python 绑定 |
+| bsplines | B 样条核心实现 |
+| bsplines_python | B 样条 Python 绑定 |
+
+---
+
+### 5. aslam_offline_calibration — 离线校准库
+提供 AprilTag 检测和 Kalibr 核心校准功能。
+
+| 模块 | 功能定位 |
+|------|----------|
+| ethz_apriltag2 | ETHZ AprilTag 检测库 |
+| kalibr | Kalibr 离线校准核心实现 |
+
+---
+
+### 6. Calibration — 标定核心模块
 相机与 IMU 标定的核心实现。
 
 | 模块 | 功能定位 |
 |------|----------|
-| incremental_calibration | 增量式标定 |
-| aslam_splines | B样条曲线 (ASL 实现) |
-| bsplines | B样条基础库 |
-| ethz_apriltag2 | AprilTag 检测库 |
 | kalibr | Kalibr 标定主程序 |
 
 ---
 
-### 4. Optimizer — 优化器模块
+### 7. Optimizer — 优化器模块
 非线性优化基础设施。
 
 | 模块 | 功能定位 |
@@ -122,7 +140,7 @@ ASL (Autonomous Systems Lab) 计算机视觉基础设施。
 
 ---
 
-### 5. Infrastructure — 基础设施
+### 8. Infrastructure — 基础设施
 构建系统与第三方依赖封装。
 
 | 模块 | 功能定位 |
