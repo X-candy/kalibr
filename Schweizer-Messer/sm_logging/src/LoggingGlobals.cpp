@@ -1,10 +1,38 @@
 #include <sm/logging/LoggingGlobals.hpp>
 #include <sm/logging/StdOutLogger.hpp>
+#include <sm/logging/Logger.hpp>
+#include <stdexcept>
 
 namespace sm {
     namespace logging {
 
         LoggingGlobals g_logging_globals;
+        std::shared_ptr<spdlog::logger> g_spdlog_logger;
+
+        void initializeLogging(const std::string& loggerName) {
+            if (!g_spdlog_logger) {
+                try {
+                    auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+                    console_sink->set_pattern("[%H:%M:%S.%e] [%^%l%$] %v");
+
+                    g_spdlog_logger = std::make_shared<spdlog::logger>(loggerName, console_sink);
+                    g_spdlog_logger->set_level(spdlog::level::info);
+                    g_spdlog_logger->flush_on(spdlog::level::err);
+
+                    spdlog::register_logger(g_spdlog_logger);
+                } catch (const spdlog::spdlog_ex& ex) {
+                    throw std::runtime_error(std::string("Log initialization failed: ") + ex.what());
+                }
+            }
+        }
+
+        std::shared_ptr<spdlog::logger>& getSpdLogger() {
+            if (!g_spdlog_logger) {
+                initializeLogging();
+            }
+            return g_spdlog_logger;
+        }
+
 
 
 

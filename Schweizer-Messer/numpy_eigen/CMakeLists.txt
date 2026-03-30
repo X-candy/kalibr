@@ -1,30 +1,30 @@
-cmake_minimum_required(VERSION 3.0.2)
-project(numpy_eigen)
+cmake_minimum_required(VERSION 3.10)
+project(numpy_eigen VERSION 0.0.1)
 
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(catkin REQUIRED COMPONENTS python_module)
-find_package(Boost REQUIRED COMPONENTS system)
+include(GNUInstallDirs)
+
+option(BUILD_TESTING "Build tests" ON)
+
+# 包含父项目的CMake模块
+include(${CMAKE_SOURCE_DIR}/cmake/modules/CatkinReplacements.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/modules/FindDependencies.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/modules/PythonBindingHelpers.cmake)
+
 find_package(Eigen3 REQUIRED)
+find_package(Boost REQUIRED COMPONENTS python)
 
-catkin_python_setup()
+include_directories(include ${EIGEN3_INCLUDE_DIRS})
 
 add_definitions(${EIGEN_DEFINITIONS})
-include_directories(include ${EIGEN3_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS})
 include_directories("${PROJECT_SOURCE_DIR}/include/numpy_eigen")
 
-catkin_package(
-  INCLUDE_DIRS include ${catkin_INCLUDE_DIRS}
-  LIBRARIES ${PROJECT_NAME}
-  DEPENDS Boost
-  CFG_EXTRAS numpy_eigen-extras.cmake
-)
 add_definitions(-D__STRICT_ANSI__)
 
-# ignore "error: return-statement with a value, in function returning ‘void’" in "__multiarray_api.h"
+# ignore "error: return-statement with a value, in function returning 'void'" in "__multiarray_api.h"
 add_compile_options(-fpermissive)
-
-include_directories(include ${Boost_INCLUDE_DIRS})
 
 IF(APPLE)
   link_directories( /usr/local/lib )
@@ -35,43 +35,45 @@ ENDIF(APPLE)
 ##############
 
 INCLUDE(src/autogen_files.cmake)
-add_python_export_library(${PROJECT_NAME} 
+add_python_export_library(${PROJECT_NAME}
   ${PROJECT_SOURCE_DIR}/python/${PROJECT_NAME} ${AUTOGEN_FILES}
 )
 
-target_link_libraries(${PROJECT_NAME} 
-                      ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-                      
+target_link_libraries(${PROJECT_NAME}
+  ${Boost_LIBRARIES}
+  Python3::Python
+  Python3::NumPy
+  Eigen3::Eigen
+)
+
 INCLUDE(src/autogen_test_files.cmake)
-add_python_export_library(${PROJECT_NAME}_test 
+add_python_export_library(${PROJECT_NAME}_test
       ${PROJECT_SOURCE_DIR}/python/${PROJECT_NAME} ${AUTOGEN_TEST_FILES}
   )
 
 #############
 ## Testing ##
 #############
-if(CATKIN_ENABLE_TESTING)
-  ## Add nosetest based cpp test target.
-  catkin_add_nosetests(test/numpy_eigen_tests.py)
+if(BUILD_TESTING)
+  enable_testing()
+  find_package(GTest REQUIRED)
+  ##
+  # Add nosetest based cpp test target.
+  # catkin_add_nosetests(test/numpy_eigen_tests.py)
+  # TODO: 迁移nosetest到标准CTest
 endif()
-
-install(TARGETS ${PROJECT_NAME}
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
 
 ##################
 ## Installation ##
 ##################
 
-install(TARGETS ${PROJECT_NAME}
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_test
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
 ## Mark cpp header files for installation
 install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
 )

@@ -1,54 +1,104 @@
-cmake_minimum_required(VERSION 3.0.2)
-project(aslam_splines)
+cmake_minimum_required(VERSION 3.10)
+project(aslam_splines VERSION 0.0.1)
 
-find_package(catkin REQUIRED COMPONENTS
-  aslam_backend
-  aslam_backend_expressions
-  bsplines
-  numpy_eigen
-  sparse_block_matrix
-  sm_common
-  sm_kinematics
-  sm_timing
-  opencv2_catkin
-)
-find_package(Boost REQUIRED COMPONENTS system)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-catkin_package(
+# 包含父项目的CMake模块（使用相对路径）
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/modules/CatkinReplacements.cmake)
+  include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/modules/CatkinReplacements.cmake)
+  include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/modules/FindDependencies.cmake)
+elseif(EXISTS ${CMAKE_SOURCE_DIR}/cmake/modules/CatkinReplacements.cmake)
+  include(${CMAKE_SOURCE_DIR}/cmake/modules/CatkinReplacements.cmake)
+  include(${CMAKE_SOURCE_DIR}/cmake/modules/FindDependencies.cmake)
+else()
+  message(STATUS "Building aslam_splines independently - assuming dependencies are installed")
+  find_package(Eigen3 REQUIRED)
+  find_package(Boost REQUIRED COMPONENTS system)
+  find_package(OpenCV REQUIRED)
+endif()
+
+kalibr_package(
   LIBRARIES ${PROJECT_NAME}
   INCLUDE_DIRS include
-  CATKIN_DEPENDS bsplines
+  DEPENDS Boost bs
 )
 
-include_directories(include ${catkin_INCLUDE_DIRS})
+include_directories(include)
+
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -D__STRICT_ANSI__")
+
+include(GNUInstallDirs)
+
+##############
+## Building ##
+##############
 
 add_library(${PROJECT_NAME}
   src/BSplinePoseDesignVariable.cpp
   src/BSplineExpressions.cpp
   src/EuclideanBSplineDesignVariable.cpp
 )
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} ${KALIBR_LIB_LIBRARIES} ${OpenCV_LIBRARIES})
 
-if(CATKIN_ENABLE_TESTING)
-  catkin_add_gtest(${PROJECT_NAME}_test
+if(BUILD_TESTING)
+  enable_testing()
+  find_package(GTest REQUIRED)
+
+  add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=0)
+
+  add_executable(${PROJECT_NAME}_test
     test/test_main.cpp
     test/TestBSplineExpressions.cpp
     test/TestErrors.cpp
     #  test/TestOPTBSpline.cpp
-    )
-  target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME})
+  )
+  target_link_libraries(${PROJECT_NAME}_test
+    GTest::GTest
+    GTest::Main
+    pthread
+    ${PROJECT_NAME}
+  )
+  add_test(NAME ${PROJECT_NAME}_test COMMAND ${PROJECT_NAME}_test)
 endif()
 
 ##################
 ## Installation ##
 ##################
+
 install(TARGETS ${PROJECT_NAME}
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  EXPORT ${PROJECT_NAME}Targets
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-## Mark cpp header files for installation
 install(DIRECTORY include/
-  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+# 生成CMake配置文件（让其他模块可以find_package）
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion
+)
+
+install(EXPORT ${PROJECT_NAME}Targets
+  FILE ${PROJECT_NAME}Targets.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )

@@ -1,52 +1,107 @@
-cmake_minimum_required(VERSION 3.0.2)
-project(aslam_cameras_april)
+cmake_minimum_required(VERSION 3.10)
+project(aslam_cameras_april VERSION 0.0.1)
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 ADD_DEFINITIONS(-DASLAM_USE_ROS)
 
-find_package(catkin REQUIRED COMPONENTS
-  sm_python
-  aslam_cameras
-  ethz_apriltag2
-  numpy_eigen
-  sm_common
-  sm_logging
-  sm_boost
-  sm_eigen
-  python_module
-)
-find_package(OpenCV REQUIRED)
-find_package(Boost REQUIRED COMPONENTS serialization system)
-find_package(Eigen3 REQUIRED)
+# 包含父项目的CMake模块（使用相对路径）
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/modules/CatkinReplacements.cmake)
+  include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/modules/CatkinReplacements.cmake)
+  include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/modules/FindDependencies.cmake)
+  include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/modules/PythonBindingHelpers.cmake)
+elseif(EXISTS ${CMAKE_SOURCE_DIR}/cmake/modules/CatkinReplacements.cmake)
+  include(${CMAKE_SOURCE_DIR}/cmake/modules/CatkinReplacements.cmake)
+  include(${CMAKE_SOURCE_DIR}/cmake/modules/FindDependencies.cmake)
+  include(${CMAKE_SOURCE_DIR}/cmake/modules/PythonBindingHelpers.cmake)
+else()
+  message(STATUS "Building aslam_cameras_april independently - assuming dependencies are installed")
+  find_package(Boost REQUIRED COMPONENTS serialization system)
+  find_package(OpenCV REQUIRED)
+  find_package(Eigen3 REQUIRED)
+  find_package(Python3 REQUIRED COMPONENTS Development NumPy)
+endif()
 
-catkin_package(
+kalibr_package(
   LIBRARIES ${PROJECT_NAME}
   INCLUDE_DIRS include
   DEPENDS OpenCV Boost
 )
 
-include_directories(include ${catkin_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR} ${Boost_INCLUDE_DIRS})
+# 内部依赖查找
+kalibr_find_module(aslam_cameras REQUIRED)
+kalibr_find_module(sm_common REQUIRED)
+kalibr_find_module(sm_logging REQUIRED)
+kalibr_find_module(sm_property_tree REQUIRED)
+kalibr_find_module(sm_opencv REQUIRED)
+kalibr_find_module(sm_eigen REQUIRED)
 
-add_library(${PROJECT_NAME} 
+include_directories(include
+  ${aslam_cameras_INCLUDE_DIRS}
+  ${sm_common_INCLUDE_DIRS}
+  ${sm_logging_INCLUDE_DIRS}
+  ${sm_property_tree_INCLUDE_DIRS}
+  ${sm_opencv_INCLUDE_DIRS}
+  ${sm_eigen_INCLUDE_DIRS}
+)
+
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -D__STRICT_ANSI__")
+
+include(GNUInstallDirs)
+
+##############
+## Building ##
+##############
+
+add_library(${PROJECT_NAME}
   src/GridCalibrationTargetAprilgrid.cpp
 )
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} ${OpenCV_LIBRARIES})
 
+# Python绑定
 add_python_export_library(${PROJECT_NAME}_python python/aslam_cameras_april
   src/module.cpp
 )
-target_link_libraries(${PROJECT_NAME}_python ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME}_python ${PROJECT_NAME} ${sm_python_LIBRARIES} ${python_module_LIBRARIES})
 
 ##################
 ## Installation ##
 ##################
 
 install(TARGETS ${PROJECT_NAME}
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  EXPORT ${PROJECT_NAME}Targets
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-## Mark cpp header files for installation
 install(DIRECTORY include/
-  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+# 生成CMake配置文件（让其他模块可以find_package）
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion
+)
+
+install(EXPORT ${PROJECT_NAME}Targets
+  FILE ${PROJECT_NAME}Targets.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )

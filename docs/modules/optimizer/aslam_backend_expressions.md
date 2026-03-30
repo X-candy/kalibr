@@ -41,6 +41,17 @@ package "aslam_backend_expressions" {
         class TransformationExpression <<变换表达式>>
         class EuclideanExpression <<欧几里得表达式>>
         class QuaternionExpression <<四元数表达式>>
+
+      ScalarExpression -[hidden]right-> VectorExpression
+      VectorExpression -[hidden]right-> MatrixExpression
+      RotationExpression -[hidden]right-> TransformationExpression
+      TransformationExpression -[hidden]right-> EuclideanExpression
+
+      ScalarExpression -[hidden]down-> RotationExpression
+      VectorExpression -[hidden]down-> TransformationExpression
+      MatrixExpression -[hidden]down-> EuclideanExpression
+
+      TransformationExpression -[hidden]down-> QuaternionExpression
     }
 
     package "表达式节点" {
@@ -51,6 +62,17 @@ package "aslam_backend_expressions" {
         class TransformationExpressionNode <<变换表达式节点>>
         class EuclideanExpressionNode <<欧几里得表达式节点>>
         class GenericScalarExpressionNode <<通用标量表达式节点>>
+
+      ScalarExpressionNode -[hidden]right-> VectorExpressionNode
+      VectorExpressionNode -[hidden]right-> MatrixExpressionNode
+      RotationExpressionNode -[hidden]right-> TransformationExpressionNode
+      TransformationExpressionNode -[hidden]right-> EuclideanExpressionNode
+
+      ScalarExpressionNode -[hidden]down-> RotationExpressionNode
+      VectorExpressionNode -[hidden]down-> TransformationExpressionNode
+      MatrixExpressionNode -[hidden]down-> EuclideanExpressionNode
+
+      TransformationExpressionNode -[hidden]down-> GenericScalarExpressionNode
     }
 
     package "设计变量表达式" {

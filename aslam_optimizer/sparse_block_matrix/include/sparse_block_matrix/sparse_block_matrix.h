@@ -27,7 +27,6 @@
 #include "matrix_structure.h"
 #include <sm/assert_macros.hpp>
 #include <boost/algorithm/minmax.hpp>
-#include "sparse_helper.h"
 
 namespace sparse_block_matrix {
   using namespace Eigen;

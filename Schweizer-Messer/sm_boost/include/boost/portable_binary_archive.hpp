@@ -28,7 +28,10 @@
 #endif
 
 #include <boost/archive/basic_archive.hpp>
-#include <boost/detail/endian.hpp>
+// 使用Boost标准endian支持
+#define BOOST_ENDIAN_DEPRECATED_NAMES
+#include <boost/endian/endian.hpp>
+#include <boost/endian/conversion.hpp>
 
 
 namespace boost {

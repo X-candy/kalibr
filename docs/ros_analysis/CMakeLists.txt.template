@@ -1,0 +1,107 @@
+# 标准CMake模板 - 从catkin迁移使用
+# 将${MODULE_NAME}替换为实际模块名称
+
+cmake_minimum_required(VERSION 3.0.2)
+project(${MODULE_NAME} VERSION 0.0.1)
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# 第三方依赖 - 根据模块实际需要添加
+find_package(Boost REQUIRED COMPONENTS system)
+# find_package(Eigen3 REQUIRED)
+# find_package(OpenCV REQUIRED)
+
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -D__STRICT_ANSI__")
+
+include(GNUInstallDirs)
+
+include_directories(
+  include
+  ${Boost_INCLUDE_DIRS}
+  # ${EIGEN3_INCLUDE_DIRS}
+  # ${OpenCV_INCLUDE_DIRS}
+)
+
+# 库源文件 - 根据模块实际情况添加
+add_library(${PROJECT_NAME}
+  # src/file1.cpp
+  # src/file2.cpp
+)
+target_link_libraries(${PROJECT_NAME}
+  ${Boost_LIBRARIES}
+  # ${EIGEN3_LIBRARIES}
+  # ${OpenCV_LIBRARIES}
+)
+
+# 目标包含目录配置
+target_include_directories(${PROJECT_NAME} PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+
+##################
+## Installation ##
+##################
+
+install(TARGETS ${PROJECT_NAME}
+  EXPORT ${PROJECT_NAME}Targets
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+install(DIRECTORY include/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+# CMake配置文件生成
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion
+)
+
+install(EXPORT ${PROJECT_NAME}Targets
+  FILE ${PROJECT_NAME}Targets.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+#############
+## Testing ##
+#############
+option(BUILD_TESTING "Build tests" ON)
+if(BUILD_TESTING)
+  enable_testing()
+  find_package(GTest REQUIRED)
+
+  add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=0)
+
+  # 测试源文件 - 根据模块实际情况添加
+  add_executable(${PROJECT_NAME}-test
+    # test/test_main.cpp
+    # test/test_file1.cpp
+  )
+  target_link_libraries(${PROJECT_NAME}-test
+    GTest::GTest
+    GTest::Main
+    pthread
+    ${PROJECT_NAME}
+  )
+
+  add_test(NAME ${PROJECT_NAME}-test COMMAND ${PROJECT_NAME}-test)
+endif()

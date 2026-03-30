@@ -1,0 +1,159 @@
+=== Kalibr项目CMakeLists.txt分析报告 ===
+
+分析的CMakeLists.txt文件数量: 47
+
+=== 构建系统特性统计 ===
+
+使用catkin的项目: 11
+使用catkin_simple的项目: 4
+使用catkin_python_setup的项目: 2
+使用add_python_export_library的项目: 11
+
+使用Boost的项目: 28
+使用Eigen的项目: 19
+使用OpenCV的项目: 13
+使用SuiteSparse的项目: 1
+使用TBB的项目: 0
+
+使用的C++标准: ['14']
+自定义CMake宏: ['add_python_export_library', 'cs_add_library', 'cs_install']
+
+包含测试的项目: 15
+
+=== 所有项目列表 ===
+
+Kalibr                                   : ./CMakeLists.txt
+Schweizer-Messer                         : ./Schweizer-Messer/CMakeLists.txt
+aslam_backend                            : ./aslam_optimizer/aslam_backend/CMakeLists.txt
+aslam_backend_expressions                : ./aslam_optimizer/aslam_backend_expressions/CMakeLists.txt
+aslam_backend_python                     : ./aslam_optimizer/aslam_backend_python/CMakeLists.txt
+aslam_cameras                            : ./aslam_cv/aslam_cameras/CMakeLists.txt
+aslam_cameras_april                      : ./aslam_cv/aslam_cameras_april/CMakeLists.txt
+aslam_cv                                 : ./aslam_cv/CMakeLists.txt
+aslam_cv_backend                         : ./aslam_cv/aslam_cv_backend/CMakeLists.txt
+aslam_cv_backend_python                  : ./aslam_cv/aslam_cv_backend_python/CMakeLists.txt
+aslam_cv_error_terms                     : ./aslam_cv/aslam_cv_error_terms/CMakeLists.txt
+aslam_cv_python                          : ./aslam_cv/aslam_cv_python/CMakeLists.txt
+aslam_cv_serialization                   : ./aslam_cv/aslam_cv_serialization/CMakeLists.txt
+aslam_imgproc                            : ./aslam_cv/aslam_imgproc/CMakeLists.txt
+aslam_incremental_calibration            : ./aslam_incremental_calibration/CMakeLists.txt
+aslam_nonparametric_estimation           : ./aslam_nonparametric_estimation/CMakeLists.txt
+aslam_offline_calibration                : ./aslam_offline_calibration/CMakeLists.txt
+aslam_optimizer                          : ./aslam_optimizer/CMakeLists.txt
+aslam_splines                            : ./aslam_nonparametric_estimation/aslam_splines/CMakeLists.txt
+aslam_splines_python                     : ./aslam_nonparametric_estimation/aslam_splines_python/CMakeLists.txt
+aslam_time                               : ./aslam_cv/aslam_time/CMakeLists.txt
+bar                                      : ./catkin_simple/test/scenarios/hello_world/bar/CMakeLists.txt
+baz                                      : ./catkin_simple/test/scenarios/hello_world/baz/CMakeLists.txt
+bsplines                                 : ./aslam_nonparametric_estimation/bsplines/CMakeLists.txt
+bsplines_python                          : ./aslam_nonparametric_estimation/bsplines_python/CMakeLists.txt
+catkin_simple                            : ./catkin_simple/CMakeLists.txt
+ethz_apriltag2                           : ./aslam_offline_calibration/ethz_apriltag2/CMakeLists.txt
+foo                                      : ./catkin_simple/test/scenarios/hello_world/foo/CMakeLists.txt
+incremental_calibration                  : ./aslam_incremental_calibration/incremental_calibration/CMakeLists.txt
+incremental_calibration_python           : ./aslam_incremental_calibration/incremental_calibration_python/CMakeLists.txt
+kalibr                                   : ./aslam_offline_calibration/kalibr/CMakeLists.txt
+numpy_eigen                              : ./Schweizer-Messer/numpy_eigen/CMakeLists.txt
+opencv2_catkin                           : ./opencv2_catkin/CMakeLists.txt
+python_module                            : ./Schweizer-Messer/python_module/CMakeLists.txt
+sm_boost                                 : ./Schweizer-Messer/sm_boost/CMakeLists.txt
+sm_common                                : ./Schweizer-Messer/sm_common/CMakeLists.txt
+sm_eigen                                 : ./Schweizer-Messer/sm_eigen/CMakeLists.txt
+sm_kinematics                            : ./Schweizer-Messer/sm_kinematics/CMakeLists.txt
+sm_logging                               : ./Schweizer-Messer/sm_logging/CMakeLists.txt
+sm_matrix_archive                        : ./Schweizer-Messer/sm_matrix_archive/CMakeLists.txt
+sm_opencv                                : ./Schweizer-Messer/sm_opencv/CMakeLists.txt
+sm_property_tree                         : ./Schweizer-Messer/sm_property_tree/CMakeLists.txt
+sm_python                                : ./Schweizer-Messer/sm_python/CMakeLists.txt
+sm_random                                : ./Schweizer-Messer/sm_random/CMakeLists.txt
+sm_timing                                : ./Schweizer-Messer/sm_timing/CMakeLists.txt
+sparse_block_matrix                      : ./aslam_optimizer/sparse_block_matrix/CMakeLists.txt
+
+=== 使用add_python_export_library的项目 ===
+
+./Schweizer-Messer/numpy_eigen/CMakeLists.txt
+./Schweizer-Messer/sm_python/CMakeLists.txt
+./aslam_cv/aslam_cameras_april/CMakeLists.txt
+./aslam_cv/aslam_cv_backend/CMakeLists.txt
+./aslam_cv/aslam_cv_backend_python/CMakeLists.txt
+./aslam_cv/aslam_cv_python/CMakeLists.txt
+./aslam_incremental_calibration/incremental_calibration_python/CMakeLists.txt
+./aslam_nonparametric_estimation/aslam_splines_python/CMakeLists.txt
+./aslam_nonparametric_estimation/bsplines_python/CMakeLists.txt
+./aslam_offline_calibration/kalibr/CMakeLists.txt
+./aslam_optimizer/aslam_backend_python/CMakeLists.txt
+
+=== 使用catkin_simple的项目 ===
+
+./catkin_simple/CMakeLists.txt
+./catkin_simple/test/scenarios/hello_world/bar/CMakeLists.txt
+./catkin_simple/test/scenarios/hello_world/foo/CMakeLists.txt
+./opencv2_catkin/CMakeLists.txt
+
+=== 包含测试的项目 ===
+
+./Schweizer-Messer/sm_boost/CMakeLists.txt
+./Schweizer-Messer/sm_common/CMakeLists.txt
+./Schweizer-Messer/sm_eigen/CMakeLists.txt
+./Schweizer-Messer/sm_kinematics/CMakeLists.txt
+./Schweizer-Messer/sm_logging/CMakeLists.txt
+./Schweizer-Messer/sm_matrix_archive/CMakeLists.txt
+./Schweizer-Messer/sm_property_tree/CMakeLists.txt
+./Schweizer-Messer/sm_timing/CMakeLists.txt
+./aslam_cv/aslam_cameras/CMakeLists.txt
+./aslam_cv/aslam_cv_backend/CMakeLists.txt
+./aslam_incremental_calibration/incremental_calibration/CMakeLists.txt
+./aslam_nonparametric_estimation/aslam_splines/CMakeLists.txt
+./aslam_offline_calibration/kalibr/CMakeLists.txt
+./aslam_optimizer/aslam_backend/CMakeLists.txt
+./aslam_optimizer/sparse_block_matrix/CMakeLists.txt
+
+=== 文件路径列表 ===
+
+./CMakeLists.txt
+./Schweizer-Messer/CMakeLists.txt
+./Schweizer-Messer/numpy_eigen/CMakeLists.txt
+./Schweizer-Messer/python_module/CMakeLists.txt
+./Schweizer-Messer/sm_boost/CMakeLists.txt
+./Schweizer-Messer/sm_common/CMakeLists.txt
+./Schweizer-Messer/sm_eigen/CMakeLists.txt
+./Schweizer-Messer/sm_kinematics/CMakeLists.txt
+./Schweizer-Messer/sm_logging/CMakeLists.txt
+./Schweizer-Messer/sm_matrix_archive/CMakeLists.txt
+./Schweizer-Messer/sm_opencv/CMakeLists.txt
+./Schweizer-Messer/sm_property_tree/CMakeLists.txt
+./Schweizer-Messer/sm_python/CMakeLists.txt
+./Schweizer-Messer/sm_random/CMakeLists.txt
+./Schweizer-Messer/sm_timing/CMakeLists.txt
+./aslam_cv/CMakeLists.txt
+./aslam_cv/aslam_cameras/CMakeLists.txt
+./aslam_cv/aslam_cameras_april/CMakeLists.txt
+./aslam_cv/aslam_cv_backend/CMakeLists.txt
+./aslam_cv/aslam_cv_backend_python/CMakeLists.txt
+./aslam_cv/aslam_cv_error_terms/CMakeLists.txt
+./aslam_cv/aslam_cv_python/CMakeLists.txt
+./aslam_cv/aslam_cv_serialization/CMakeLists.txt
+./aslam_cv/aslam_imgproc/CMakeLists.txt
+./aslam_cv/aslam_time/CMakeLists.txt
+./aslam_incremental_calibration/CMakeLists.txt
+./aslam_incremental_calibration/incremental_calibration/CMakeLists.txt
+./aslam_incremental_calibration/incremental_calibration_python/CMakeLists.txt
+./aslam_nonparametric_estimation/CMakeLists.txt
+./aslam_nonparametric_estimation/aslam_splines/CMakeLists.txt
+./aslam_nonparametric_estimation/aslam_splines_python/CMakeLists.txt
+./aslam_nonparametric_estimation/bsplines/CMakeLists.txt
+./aslam_nonparametric_estimation/bsplines_python/CMakeLists.txt
+./aslam_offline_calibration/CMakeLists.txt
+./aslam_offline_calibration/ethz_apriltag2/CMakeLists.txt
+./aslam_offline_calibration/ethz_apriltag2/src/example/CMakeLists.txt
+./aslam_offline_calibration/kalibr/CMakeLists.txt
+./aslam_optimizer/CMakeLists.txt
+./aslam_optimizer/aslam_backend/CMakeLists.txt
+./aslam_optimizer/aslam_backend_expressions/CMakeLists.txt
+./aslam_optimizer/aslam_backend_python/CMakeLists.txt
+./aslam_optimizer/sparse_block_matrix/CMakeLists.txt
+./catkin_simple/CMakeLists.txt
+./catkin_simple/test/scenarios/hello_world/bar/CMakeLists.txt
+./catkin_simple/test/scenarios/hello_world/baz/CMakeLists.txt
+./catkin_simple/test/scenarios/hello_world/foo/CMakeLists.txt
+./opencv2_catkin/CMakeLists.txt

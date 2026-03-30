@@ -76,12 +76,13 @@ find_package(catkin REQUIRED COMPONENTS ${${PROJECT_NAME}_CATKIN_BUILD_DEPENDS})
 start
 :解析 package.xml;
 :提取所有 build_depend;
-foreach (dep in build_depend)
-    :find_package(dep QUIET);
-    if (dep 是 catkin 包?) then (yes)
-        :添加到 CATKIN_BUILD_DEPENDS;
-    endif
-endforeach
+while (还有未处理的 build_depend?) is (yes)
+  :取下一个 dep;
+  :find_package(dep QUIET);
+  if (dep 是 catkin 包?) then (yes)
+    :添加到 CATKIN_BUILD_DEPENDS;
+  endif
+endwhile (no)
 :find_package(catkin REQUIRED COMPONENTS ...);
 :配置 include 目录;
 :检测 msg/srv/action 目录;

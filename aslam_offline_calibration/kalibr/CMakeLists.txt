@@ -1,82 +1,97 @@
-cmake_minimum_required(VERSION 3.0.2)
-project(kalibr)
+cmake_minimum_required(VERSION 3.10)
+project(kalibr LANGUAGES CXX)
 
-find_package(catkin REQUIRED COMPONENTS
-  aslam_cv_python
-  aslam_backend
-  aslam_backend_expressions
-  aslam_backend_python
-  incremental_calibration_python
-  aslam_cameras_april
-  aslam_splines_python
-  numpy_eigen
-  python_module
-  sparse_block_matrix
-  sm_python
-  aslam_cv_backend_python
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CXX_EXTENSIONS OFF)
+
+# CMake模块路径
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
+
+# 包含父项目的CMake模块（使用相对路径）
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/modules/CatkinReplacements.cmake)
+  include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/modules/CatkinReplacements.cmake)
+  include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/modules/FindDependencies.cmake)
+  include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/modules/PythonBindingHelpers.cmake)
+elseif(EXISTS ${CMAKE_SOURCE_DIR}/cmake/modules/CatkinReplacements.cmake)
+  include(${CMAKE_SOURCE_DIR}/cmake/modules/CatkinReplacements.cmake)
+  include(${CMAKE_SOURCE_DIR}/cmake/modules/FindDependencies.cmake)
+  include(${CMAKE_SOURCE_DIR}/cmake/modules/PythonBindingHelpers.cmake)
+else()
+  message(STATUS "Building kalibr independently - assuming dependencies are installed")
+  find_package(Boost REQUIRED COMPONENTS serialization system)
+  find_package(OpenCV REQUIRED)
+  find_package(Eigen3 REQUIRED)
+  find_package(GTest)
+  if(GTest_FOUND)
+    enable_testing()
+  endif()
+endif()
+
+# 内部依赖查找 - Schweizer-Messer基础模块
+kalibr_find_module(sm_common REQUIRED)
+kalibr_find_module(sm_logging REQUIRED)
+kalibr_find_module(sm_eigen REQUIRED)
+kalibr_find_module(sm_opencv REQUIRED)
+kalibr_find_module(sm_kinematics REQUIRED)
+kalibr_find_module(sm_property_tree REQUIRED)
+kalibr_find_module(sm_timing REQUIRED)
+kalibr_find_module(aslam_backend REQUIRED)
+kalibr_find_module(aslam_backend_expressions REQUIRED)
+kalibr_find_module(aslam_cv_backend REQUIRED)
+kalibr_find_module(aslam_cv_error_terms REQUIRED)
+kalibr_find_module(aslam_cameras REQUIRED)
+kalibr_find_module(aslam_imgproc REQUIRED)
+kalibr_find_module(aslam_time REQUIRED)
+kalibr_find_module(sparse_block_matrix REQUIRED)
+kalibr_find_module(sm_python REQUIRED)
+kalibr_find_module(numpy_eigen REQUIRED)
+kalibr_find_module(python_module REQUIRED)
+
+# 第三方依赖查找
+find_package(Boost REQUIRED COMPONENTS serialization system)
+find_package(OpenCV REQUIRED)
+find_package(Eigen3 REQUIRED)
+
+include_directories(
+  include
+  ${Boost_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIRS}
 )
 
-catkin_package(
-  INCLUDE_DIRS include  
-  LIBRARIES ${PROJECT_NAME}
-)
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -D__STRICT_ANSI__")
 
-##################################
-# error terms (+python export)
-##################################
-include_directories(include ${catkin_INCLUDE_DIRS})
+include(GNUInstallDirs)
+
+##############
+## error terms (cpp library)
+##############
 
 add_library(${PROJECT_NAME}_errorterms
   src/EuclideanError.cpp
   src/GyroscopeError.cpp
   src/AccelerometerError.cpp
 )
-target_link_libraries(${PROJECT_NAME}_errorterms ${catkin_LIBRARIES})
-
-# NB: The ".." is a hack to install the Python bindings to a global location to
-# then be able to import it into a local context project. This is required to
-# work-around having multiple Python packages in one catkin package and the way
-# the PYTHON_PATH overloads work.
-add_python_export_library(${PROJECT_NAME}_errorterms_python python/${PROJECT_NAME}_errorterms/..
-  src/module.cpp
-)
-target_link_libraries(${PROJECT_NAME}_errorterms_python ${PROJECT_NAME}_errorterms)
-
-##################################
-# tests
-##################################
-if(CATKIN_ENABLE_TESTING)
-  add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=0)
-
-  catkin_add_gtest(${PROJECT_NAME}_test
-    test/test_main.cpp
-    test/TestErrorTerms.cpp
-    )
-  target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME}_errorterms)
-endif()
-
-##################################
-# EXPORT
-##################################
-catkin_python_setup()
-
-install(TARGETS ${${PROJECT_NAME}_TARGETS}
-    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+target_link_libraries(${PROJECT_NAME}_errorterms
+  ${Boost_LIBRARIES}
+  ${KALIBR_LIBRARIES}
 )
 
-catkin_install_python(
-  PROGRAMS
-    python/kalibr_bagcreater
-    python/kalibr_camera_focus
-    python/kalibr_bagextractor
-    python/kalibr_camera_validator
-    python/kalibr_visualize_calibration
-    python/kalibr_calibrate_cameras
-    python/kalibr_visualize_distortion
-    python/kalibr_calibrate_imu_camera
-    python/kalibr_create_target_pdf
-    python/kalibr_calibrate_rs_cameras
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+target_include_directories(${PROJECT_NAME}_errorterms PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
+
+##################
+## Installation ##
+##################
+
+install(TARGETS ${PROJECT_NAME}_errorterms
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+install(DIRECTORY include/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

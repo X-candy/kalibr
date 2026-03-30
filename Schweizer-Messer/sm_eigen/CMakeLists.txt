@@ -1,59 +1,92 @@
-cmake_minimum_required(VERSION 3.0.2)
-project(sm_eigen)
+cmake_minimum_required(VERSION 3.10)
+project(sm_eigen VERSION 0.0.1)
 
-find_package(catkin REQUIRED COMPONENTS sm_common sm_random)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+include(GNUInstallDirs)
+
+option(BUILD_TESTING "Build tests" ON)
+
+# 包含全局依赖配置
+include(${CMAKE_SOURCE_DIR}/cmake/modules/FindDependencies.cmake)
+
 find_package(Boost REQUIRED COMPONENTS system serialization)
 find_package(Eigen3 REQUIRED)
 
-catkin_package(
-  INCLUDE_DIRS include ${EIGEN3_INCLUDE_DIRS}
-  LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS sm_common sm_random
-  CFG_EXTRAS sm_eigen-extras.cmake
+include_directories(
+  include
+  ${Boost_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIRS}
 )
 
-include_directories(include ${catkin_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
-
-##############
-## Building ##
-##############
-
-add_library(${PROJECT_NAME}  
+add_library(${PROJECT_NAME}
   src/random.cpp
 )
 
-target_link_libraries(${PROJECT_NAME} 
-                      ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}
+  ${Boost_LIBRARIES}
+  sm_common
+  sm_random
+)
 
-##################
-## Installation ##
-##################
+target_include_directories(${PROJECT_NAME} PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
 
 install(TARGETS ${PROJECT_NAME}
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  EXPORT ${PROJECT_NAME}Targets
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-## Mark cpp header files for installation
 install(DIRECTORY include/
-  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION} #${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-#############
-## Testing ##
-#############
-if(CATKIN_ENABLE_TESTING)
-  # Avoid clash with tr1::tuple: https://code.google.com/p/googletest/source/browse/trunk/README?r=589#257
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion
+)
+
+install(EXPORT ${PROJECT_NAME}Targets
+  FILE ${PROJECT_NAME}Targets.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+if(BUILD_TESTING)
+  enable_testing()
+  find_package(GTest REQUIRED)
+
   add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=0)
 
-  ## Add gtest based cpp test target and link libraries
-  catkin_add_gtest(${PROJECT_NAME}-test
+  add_executable(${PROJECT_NAME}-test
     test/test_main.cpp
     test/EigenSerializationTests.cpp
     test/MatrixSqrtTest.cpp
-    )
-  if(TARGET ${PROJECT_NAME}-test)
-    target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
-  endif()
+  )
+  target_link_libraries(${PROJECT_NAME}-test
+    GTest::GTest
+    GTest::Main
+    pthread
+    ${PROJECT_NAME}
+  )
+  add_test(NAME ${PROJECT_NAME}-test COMMAND ${PROJECT_NAME}-test)
 endif()

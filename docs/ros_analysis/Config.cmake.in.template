@@ -1,0 +1,8 @@
+# CMake配置模板 - 从catkin迁移使用
+# 文件名改为 ${MODULE_NAME}Config.cmake.in
+
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
+
+check_required_components(@PROJECT_NAME@)

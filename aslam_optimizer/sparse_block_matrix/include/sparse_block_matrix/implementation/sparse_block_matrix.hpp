@@ -18,22 +18,21 @@
 
 namespace sparse_block_matrix {
 using namespace Eigen;
-/*
- namespace {
- struct TripletEntry
- {
- int r, c;
- double x;
- TripletEntry(int r_, int c_, double x_) : r(r_), c(c_), x(x_) {}
- };
- struct TripletColSort
- {
- bool operator()(const TripletEntry& e1, const TripletEntry& e2) const
- {
- return e1.c < e2.c || (e1.c == e2.c && e1.r < e2.r);
- }
- };
- }*/
+namespace {
+struct TripletEntry
+{
+int r, c;
+double x;
+TripletEntry(int r_, int c_, double x_) : r(r_), c(c_), x(x_) {}
+};
+struct TripletColSort
+{
+bool operator()(const TripletEntry& e1, const TripletEntry& e2) const
+{
+return e1.c < e2.c || (e1.c == e2.c && e1.r < e2.r);
+}
+};
+}
 
 template<class MatrixType>
 SparseBlockMatrix<MatrixType>::SparseBlockMatrix(const int * rbi, const int* cbi, int rb, int cb, bool hasStorage)

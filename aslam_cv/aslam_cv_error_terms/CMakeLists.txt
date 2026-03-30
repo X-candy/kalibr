@@ -1,44 +1,148 @@
-cmake_minimum_required(VERSION 3.0.2)
-project(aslam_cv_error_terms)
+cmake_minimum_required(VERSION 3.10)
+project(aslam_cv_error_terms VERSION 0.0.1)
 
-find_package(Boost REQUIRED COMPONENTS system)
-find_package(catkin REQUIRED COMPONENTS
-  sm_logging
-  sm_property_tree
-  sm_opencv
-  sm_kinematics
-  aslam_time
-  aslam_cameras
-  aslam_backend
-  aslam_cv_backend
-  aslam_backend_expressions
-  sm_boost
-  sm_eigen
-  sm_timing
-  sparse_block_matrix
-  opencv2_catkin
-  aslam_splines
-)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-catkin_package(
-  INCLUDE_DIRS include
-)
-
-if(CATKIN_ENABLE_TESTING)
-  # Avoid clash with tr1::tuple: https://code.google.com/p/googletest/source/browse/trunk/README?r=589#257
-  add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=0)
-
-  include_directories(include ${catkin_INCLUDE_DIRS})
-  # catkin_add_gtest(${PROJECT_NAME}_test
-  #   test/test_main.cpp
-  #   test/TestReprojectionError.cpp
-  # )
-  # target_link_libraries(${PROJECT_NAME}_test ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+# 包含CMake模块
+if(EXISTS ${CMAKE_SOURCE_DIR}/cmake/modules/CatkinReplacements.cmake)
+  include(${CMAKE_SOURCE_DIR}/cmake/modules/CatkinReplacements.cmake)
+  include(${CMAKE_SOURCE_DIR}/cmake/modules/FindDependencies.cmake)
+  include(${CMAKE_SOURCE_DIR}/cmake/modules/ModuleDependencies.cmake)
+else()
+  # 独立编译时依赖处理
+  find_package(Boost REQUIRED COMPONENTS system)
+  find_package(OpenCV REQUIRED)
+  find_package(Eigen3 REQUIRED)
+  find_package(sm_logging REQUIRED)
+  find_package(sm_property_tree REQUIRED)
+  find_package(sm_opencv REQUIRED)
+  find_package(sm_kinematics REQUIRED)
+  find_package(aslam_time REQUIRED)
+  find_package(aslam_cameras REQUIRED)
+  find_package(aslam_backend REQUIRED)
+  find_package(aslam_backend_expressions REQUIRED)
+  find_package(sm_boost REQUIRED)
+  find_package(sm_eigen REQUIRED)
+  find_package(sm_timing REQUIRED)
+  find_package(sparse_block_matrix REQUIRED)
+  find_package(aslam_splines REQUIRED)
 endif()
+
+# 内部依赖查找
+kalibr_find_module(sm_logging REQUIRED)
+kalibr_find_module(sm_property_tree REQUIRED)
+kalibr_find_module(sm_opencv REQUIRED)
+kalibr_find_module(sm_kinematics REQUIRED)
+kalibr_find_module(aslam_time REQUIRED)
+kalibr_find_module(aslam_cameras REQUIRED)
+kalibr_find_module(aslam_backend REQUIRED)
+kalibr_find_module(aslam_backend_expressions REQUIRED)
+kalibr_find_module(sm_boost REQUIRED)
+kalibr_find_module(sm_eigen REQUIRED)
+kalibr_find_module(sm_timing REQUIRED)
+kalibr_find_module(sparse_block_matrix REQUIRED)
+kalibr_find_module(aslam_splines REQUIRED)
+
+# 第三方依赖查找
+find_package(Boost REQUIRED COMPONENTS system)
+find_package(OpenCV REQUIRED)
+find_package(Eigen3 REQUIRED)
+
+include_directories(
+  include
+  ${Boost_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIRS}
+  ${sm_logging_INCLUDE_DIRS}
+  ${sm_property_tree_INCLUDE_DIRS}
+  ${sm_opencv_INCLUDE_DIRS}
+  ${sm_kinematics_INCLUDE_DIRS}
+  ${aslam_time_INCLUDE_DIRS}
+  ${aslam_cameras_INCLUDE_DIRS}
+  ${aslam_backend_INCLUDE_DIRS}
+  ${aslam_backend_expressions_INCLUDE_DIRS}
+  ${sm_boost_INCLUDE_DIRS}
+  ${sm_eigen_INCLUDE_DIRS}
+  ${sm_timing_INCLUDE_DIRS}
+  ${sparse_block_matrix_INCLUDE_DIRS}
+  ${aslam_splines_INCLUDE_DIRS}
+)
+
+include(GNUInstallDirs)
+
+# 头文件-only库，创建INTERFACE目标
+add_library(${PROJECT_NAME} INTERFACE)
+target_include_directories(${PROJECT_NAME} INTERFACE
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+
+# 链接依赖
+target_link_libraries(${PROJECT_NAME} INTERFACE
+  ${Boost_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+  ${sm_logging_LIBRARIES}
+  ${sm_property_tree_LIBRARIES}
+  ${sm_opencv_LIBRARIES}
+  ${sm_kinematics_LIBRARIES}
+  ${aslam_time_LIBRARIES}
+  ${aslam_cameras_LIBRARIES}
+  ${aslam_backend_LIBRARIES}
+  ${aslam_backend_expressions_LIBRARIES}
+  ${sm_boost_LIBRARIES}
+  ${sm_eigen_LIBRARIES}
+  ${sm_timing_LIBRARIES}
+  ${sparse_block_matrix_LIBRARIES}
+  ${aslam_splines_LIBRARIES}
+)
 
 ##################
 ## Installation ##
 ##################
 install(DIRECTORY include/
-  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
+
+# 生成CMake配置文件
+include(CMakePackageConfigHelpers)
+
+# 创建Config.cmake.in模板文件
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake.in "@PACKAGE_INIT@
+include(\"\${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake\")
+check_required_components(@PROJECT_NAME@)
+")
+
+configure_package_config_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion
+)
+
+# install(EXPORT ${PROJECT_NAME}Targets
+#   FILE ${PROJECT_NAME}Targets.cmake
+#   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+# )
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+#############
+## Testing ##
+#############
+if(BUILD_TESTING)
+  # Avoid clash with tr1::tuple: https://code.google.com/p/googletest/source/browse/trunk/README?r=589#257
+  add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=0)
+
+  # 测试已被注释，保持原状态
+  message(STATUS "Tests for aslam_cv_error_terms are currently disabled")
+endif()

@@ -24,7 +24,9 @@
 #include <vector>
 #include <algorithm>
 
+#ifndef NO_SUITESPARSE
 #include <cholmod.h>
+#endif
 
 namespace sparse_block_matrix {
 
@@ -62,6 +64,7 @@ namespace {
  // bool writeCCSMatrix(const char* filename, int rows, int cols, const int* Ap, const int* Ai, const double* Ax, bool upperTriangleSymmetric = true);
     
     
+#ifndef NO_SUITESPARSE
     /**
      * \brief Our extension of the CHOLMOD matrix struct
      *  used to express sparseBlockMatrix as a Cholmod Sparse Matrix
@@ -113,6 +116,7 @@ namespace {
         }
         size_t columnsAllocated;
     };
+#endif
     
     
     

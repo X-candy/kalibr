@@ -3,12 +3,15 @@
 
 #include <string>
 #include <chrono>
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <memory>
 
 namespace sm {
     namespace logging {
-        
+
         struct LoggingEvent;
-        
+
         class Logger
         {
         public:
@@ -19,7 +22,7 @@ namespace sm {
 
             Logger();
             virtual ~Logger();
-            
+
             double currentTimeSecondsUtc() const;
             std::string currentTimeString() const;
             Time currentTime() const;
@@ -29,6 +32,10 @@ namespace sm {
             virtual Time currentTimeImplementation() const;
             virtual void logImplementation(const LoggingEvent & event) = 0;
         };
+
+        // 全局日志器
+        void initializeLogging(const std::string& loggerName = "kalibr");
+        std::shared_ptr<spdlog::logger>& getSpdLogger();
 
     } // namespace logging
 } // namespace sm

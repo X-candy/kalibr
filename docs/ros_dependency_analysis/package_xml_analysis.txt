@@ -1,0 +1,134 @@
+=== Kalibr项目package.xml依赖分析报告 ===
+
+分析的package.xml文件数量: 17
+
+=== 依赖类型统计 ===
+
+build_depend: 96 个依赖
+buildtool_depend: 21 个依赖
+exec_depend: 9 个依赖
+run_depend: 18 个依赖
+test_depend: 4 个依赖
+
+=== 各package.xml文件的依赖数量 ===
+
+sm_python                                : 19 个依赖
+aslam_cv_backend_python                  : 18 个依赖
+aslam_cv_error_terms                     : 17 个依赖
+aslam_cv_python                          : 13 个依赖
+aslam_cv_serialization                   : 13 个依赖
+sm_kinematics                            : 11 个依赖
+bar                                      : 8 个依赖
+foo                                      : 8 个依赖
+sm_eigen                                 : 7 个依赖
+incremental_calibration                  : 7 个依赖
+incremental_calibration_python           : 7 个依赖
+numpy_eigen                              : 6 个依赖
+python_module                            : 3 个依赖
+sm_opencv                                : 3 个依赖
+baz                                      : 3 个依赖
+opencv2_catkin                           : 3 个依赖
+catkin_simple                            : 2 个依赖
+
+=== 高频依赖分析 ===
+
+catkin                                   : 在 18 个package.xml中被依赖
+sm_common                                : 在 11 个package.xml中被依赖
+python_module                            : 在 7 个package.xml中被依赖
+sm_eigen                                 : 在 7 个package.xml中被依赖
+eigen                                    : 在 5 个package.xml中被依赖
+sm_random                                : 在 5 个package.xml中被依赖
+sm_kinematics                            : 在 5 个package.xml中被依赖
+aslam_backend                            : 在 5 个package.xml中被依赖
+sm_boost                                 : 在 4 个package.xml中被依赖
+numpy_eigen                              : 在 4 个package.xml中被依赖
+sm_logging                               : 在 4 个package.xml中被依赖
+sm_property_tree                         : 在 4 个package.xml中被依赖
+sm_opencv                                : 在 4 个package.xml中被依赖
+opencv2_catkin                           : 在 4 个package.xml中被依赖
+aslam_cameras                            : 在 4 个package.xml中被依赖
+aslam_time                               : 在 4 个package.xml中被依赖
+catkin_simple                            : 在 4 个package.xml中被依赖
+sm_timing                                : 在 3 个package.xml中被依赖
+suitesparse                              : 在 3 个package.xml中被依赖
+boost                                    : 在 3 个package.xml中被依赖
+boost-dev                                : 在 3 个package.xml中被依赖
+
+=== 依赖类型分布详情 ===
+
+
+--- build_depend (96 个) ---
+aslam_cv_backend_python                  : sm_common, sm_python, sm_opencv, numpy_eigen, python_module, suitesparse, sparse_block_matrix, aslam_backend, aslam_backend_expressions, aslam_backend_python, opencv2_catkin, aslam_cameras, aslam_cv_error_terms, aslam_splines, aslam_cv_python, aslam_cv_backend, aslam_time
+aslam_cv_error_terms                     : sm_logging, sm_property_tree, sm_opencv, sm_kinematics, aslam_time, aslam_cameras, aslam_backend, aslam_cv_backend, aslam_backend_expressions, sm_boost, sm_eigen, sm_timing, sparse_block_matrix, suitesparse, opencv2_catkin, aslam_splines
+aslam_cv_python                          : sm_common, sm_eigen, sm_kinematics, sm_python, sm_opencv, opencv2_catkin, python_module, aslam_cv_serialization, aslam_imgproc, aslam_cameras, aslam_time, aslam_cv_serialization
+aslam_cv_serialization                   : aslam_cameras, aslam_time, sm_common, sm_boost, sm_property_tree, sm_eigen, sm_kinematics, sm_opencv, sm_logging, opencv2_catkin, sm_random, eigen
+bar                                      : boost-dev, message_generation, std_msgs
+baz                                      : boost-dev
+foo                                      : bar, baz, boost-dev
+incremental_calibration                  : sm_eigen, aslam_backend, suitesparse, tbb
+incremental_calibration_python           : incremental_calibration, numpy_eigen, python_module, aslam_backend, incremental_calibration
+numpy_eigen                              : eigen, python_module
+opencv2_catkin                           : libopencv-dev
+python_module                            : python-numpy, python3-numpy
+sm_eigen                                 : eigen, sm_common, sm_random
+sm_kinematics                            : eigen, sm_boost, sm_common, sm_eigen, sm_random
+sm_opencv                                : sm_common
+sm_python                                : eigen, sm_common, numpy_eigen, python_module, sm_kinematics, sm_timing, sm_logging, sm_matrix_archive, sm_property_tree
+
+--- buildtool_depend (21 个) ---
+aslam_cv_backend_python                  : catkin
+aslam_cv_error_terms                     : catkin
+aslam_cv_python                          : catkin
+aslam_cv_serialization                   : catkin
+bar                                      : catkin, catkin_simple
+baz                                      : catkin
+catkin_simple                            : catkin
+foo                                      : catkin, catkin_simple
+incremental_calibration                  : catkin
+incremental_calibration_python           : catkin, catkin_simple
+numpy_eigen                              : catkin
+opencv2_catkin                           : catkin, catkin_simple
+python_module                            : catkin
+sm_eigen                                 : catkin
+sm_kinematics                            : catkin
+sm_opencv                                : catkin
+sm_python                                : catkin
+
+--- exec_depend (9 个) ---
+sm_python                                : sm_common, numpy_eigen, python_module, sm_kinematics, sm_timing, sm_logging, sm_matrix_archive, sm_property_tree, python-wxtools
+
+--- run_depend (18 个) ---
+bar                                      : boost, message_runtime, std_msgs
+baz                                      : boost
+catkin_simple                            : catkin
+foo                                      : bar, baz, boost
+incremental_calibration                  : sm_eigen, aslam_backend
+numpy_eigen                              : python_module
+sm_eigen                                 : sm_common, sm_random
+sm_kinematics                            : sm_boost, sm_common, sm_eigen, sm_random
+sm_opencv                                : sm_common
+
+--- test_depend (4 个) ---
+numpy_eigen                              : roslib, rostest
+sm_eigen                                 : gtest
+sm_kinematics                            : gtest
+
+=== 文件路径 ===
+
+./Schweizer-Messer/numpy_eigen/package.xml
+./Schweizer-Messer/python_module/package.xml
+./Schweizer-Messer/sm_eigen/package.xml
+./Schweizer-Messer/sm_kinematics/package.xml
+./Schweizer-Messer/sm_opencv/package.xml
+./Schweizer-Messer/sm_python/package.xml
+./aslam_cv/aslam_cv_backend_python/package.xml
+./aslam_cv/aslam_cv_error_terms/package.xml
+./aslam_cv/aslam_cv_python/package.xml
+./aslam_cv/aslam_cv_serialization/package.xml
+./aslam_incremental_calibration/incremental_calibration/package.xml
+./aslam_incremental_calibration/incremental_calibration_python/package.xml
+./catkin_simple/package.xml
+./catkin_simple/test/scenarios/hello_world/bar/package.xml
+./catkin_simple/test/scenarios/hello_world/baz/package.xml
+./catkin_simple/test/scenarios/hello_world/foo/package.xml
+./opencv2_catkin/package.xml
