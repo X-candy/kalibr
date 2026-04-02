@@ -1,0 +1,7 @@
+@PACKAGE_INIT@
+
+set_and_check(numpy_eigen_ROOT "@PACKAGE_CMAKE_INSTALL_PREFIX@")
+
+include("${CMAKE_CURRENT_LIST_DIR}/numpy_eigenTargetsTargets.cmake")
+
+check_required_components(numpy_eigen)
