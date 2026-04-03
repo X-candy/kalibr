@@ -57,6 +57,15 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
+# 如果找到 SuiteSparse，将其头文件路径 PUBLIC 给依赖模块
+if(SUITESPARSE_FOUND)
+  target_include_directories(${PROJECT_NAME} PUBLIC
+    $<BUILD_INTERFACE:${CHOLMOD_INCLUDE_DIR}>
+    $<BUILD_INTERFACE:${CCOLAMD_INCLUDE_DIR}>
+    $<BUILD_INTERFACE:${SUITESPARSE_CONFIG_INCLUDE_DIR}>
+  )
+endif()
+
 ##################
 ## Installation ##
 ##################

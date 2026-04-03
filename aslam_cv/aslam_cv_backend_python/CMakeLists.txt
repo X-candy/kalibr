@@ -54,6 +54,7 @@ kalibr_find_module(aslam_time REQUIRED)
 find_package(Boost REQUIRED COMPONENTS thread system serialization)
 find_package(OpenCV REQUIRED)
 find_package(Python3 REQUIRED COMPONENTS Development NumPy)
+find_package(Eigen3 REQUIRED)
 
 include_directories(
   include
@@ -61,6 +62,7 @@ include_directories(
   ${OpenCV_INCLUDE_DIRS}
   ${Python3_INCLUDE_DIRS}
   ${Python3_NumPy_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIRS}
   ${sm_common_INCLUDE_DIRS}
   ${sm_python_INCLUDE_DIRS}
   ${sm_opencv_INCLUDE_DIRS}

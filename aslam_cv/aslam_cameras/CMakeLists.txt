@@ -4,8 +4,6 @@ project(aslam_cameras VERSION 0.0.1)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-ADD_DEFINITIONS(-DASLAM_USE_ROS)
-
 # 包含CMake模块
 if(EXISTS ${CMAKE_SOURCE_DIR}/cmake/modules/CatkinReplacements.cmake)
   include(${CMAKE_SOURCE_DIR}/cmake/modules/CatkinReplacements.cmake)
@@ -84,12 +82,6 @@ add_library(${PROJECT_NAME}
   src/BackProjection.cpp
   src/Landmark.cpp
   src/Image.cpp
-  src/DepthCameraGeometry.cpp
-  src/MaskedCameraGeometry.cpp
-  src/PinholeCameraGeometry.cpp
-  src/SphericalCameraGeometry.cpp
-  src/PinholeRSCameraGeometry.cpp
-  src/OmniCameraGeometry.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

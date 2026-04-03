@@ -15,6 +15,11 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 # 全局模块 include 路径 - 让所有模块都能找到彼此的头文件
 include_directories(
+  ${EIGEN3_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
+  ${Python3_INCLUDE_DIRS}
+  ${Python3_NumPy_INCLUDE_DIRS}
   ${CMAKE_SOURCE_DIR}/Schweizer-Messer/sm_common/include
   ${CMAKE_SOURCE_DIR}/Schweizer-Messer/sm_logging/include
   ${CMAKE_SOURCE_DIR}/Schweizer-Messer/sm_random/include
@@ -51,6 +56,11 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/aslam_offline_calibration/kalibr/include
 )
 
+# SuiteSparse 头文件路径（如果找到）
+if(SUITESPARSE_FOUND)
+  include_directories(${CHOLMOD_INCLUDE_DIR} ${CCOLAMD_INCLUDE_DIR} ${SUITESPARSE_CONFIG_INCLUDE_DIR})
+endif()
+
 # 包含CMake实用函数
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
@@ -63,6 +73,14 @@ find_package(OpenCV REQUIRED)
 find_package(Python3 REQUIRED COMPONENTS Development NumPy)
 find_package(Threads REQUIRED)
 find_package(spdlog REQUIRED)
+
+# SuiteSparse 查找（用于稀疏矩阵求解）
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/aslam_optimizer/sparse_block_matrix/cmake")
+find_package(SuiteSparse QUIET)
+if(NOT SUITESPARSE_FOUND)
+  message(WARNING "SuiteSparse not found, some features will be disabled")
+  add_definitions(-DNO_SUITESPARSE)
+endif()
 
 # Schweizer-Messer基础模块 - 按依赖顺序添加
 add_subdirectory(Schweizer-Messer/sm_common)

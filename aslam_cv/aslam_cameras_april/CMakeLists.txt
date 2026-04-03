@@ -4,8 +4,6 @@ project(aslam_cameras_april VERSION 0.0.1)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-ADD_DEFINITIONS(-DASLAM_USE_ROS)
-
 # 包含父项目的CMake模块（使用相对路径）
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/modules/CatkinReplacements.cmake)
   include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/modules/CatkinReplacements.cmake)
@@ -36,6 +34,8 @@ kalibr_find_module(sm_logging REQUIRED)
 kalibr_find_module(sm_property_tree REQUIRED)
 kalibr_find_module(sm_opencv REQUIRED)
 kalibr_find_module(sm_eigen REQUIRED)
+kalibr_find_module(sm_python REQUIRED)
+kalibr_find_module(python_module REQUIRED)
 
 include_directories(include
   ${aslam_cameras_INCLUDE_DIRS}
