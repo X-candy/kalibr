@@ -63,9 +63,7 @@ include(GNUInstallDirs)
 ##############
 
 add_library(${PROJECT_NAME}
-  src/CameraGeometryDesignVariableContainer.cpp
   src/GridCalibrationTargetDesignVariableContainer.cpp
-  src/NCameraSystemDesignVariableContainer.cpp
   src/NCameraSystemEstimation.cpp
 )
 target_link_libraries(${PROJECT_NAME}

@@ -13,6 +13,27 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
+# 包含CMake实用函数
+include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
+include(CMakeDependentOption)
+
+# 第三方依赖查找 - 必须在 include_directories 之前
+find_package(Eigen3 REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system thread regex program_options filesystem date_time serialization)
+find_package(OpenCV REQUIRED)
+find_package(Python3 REQUIRED COMPONENTS Development NumPy)
+find_package(Threads REQUIRED)
+find_package(spdlog REQUIRED)
+
+# SuiteSparse 查找（用于稀疏矩阵求解）
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/aslam_optimizer/sparse_block_matrix/cmake")
+find_package(SuiteSparse QUIET)
+if(NOT SUITESPARSE_FOUND)
+  message(WARNING "SuiteSparse not found, some features will be disabled")
+  add_definitions(-DNO_SUITESPARSE)
+endif()
+
 # 全局模块 include 路径 - 让所有模块都能找到彼此的头文件
 include_directories(
   ${EIGEN3_INCLUDE_DIRS}
@@ -56,31 +77,8 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/aslam_offline_calibration/kalibr/include
 )
 
-# SuiteSparse 头文件路径（如果找到）
-if(SUITESPARSE_FOUND)
-  include_directories(${CHOLMOD_INCLUDE_DIR} ${CCOLAMD_INCLUDE_DIR} ${SUITESPARSE_CONFIG_INCLUDE_DIR})
-endif()
-
-# 包含CMake实用函数
-include(CMakePackageConfigHelpers)
-include(GNUInstallDirs)
-include(CMakeDependentOption)
-
-# 第三方依赖查找
-find_package(Eigen3 REQUIRED)
-find_package(Boost REQUIRED COMPONENTS system thread regex program_options filesystem date_time serialization)
-find_package(OpenCV REQUIRED)
-find_package(Python3 REQUIRED COMPONENTS Development NumPy)
-find_package(Threads REQUIRED)
-find_package(spdlog REQUIRED)
-
-# SuiteSparse 查找（用于稀疏矩阵求解）
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/aslam_optimizer/sparse_block_matrix/cmake")
-find_package(SuiteSparse QUIET)
-if(NOT SUITESPARSE_FOUND)
-  message(WARNING "SuiteSparse not found, some features will be disabled")
-  add_definitions(-DNO_SUITESPARSE)
-endif()
+# SuiteSparse 头文件路径 - 直接添加 suitesparse 目录
+include_directories(/usr/include/suitesparse)
 
 # Schweizer-Messer基础模块 - 按依赖顺序添加
 add_subdirectory(Schweizer-Messer/sm_common)

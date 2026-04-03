@@ -1,6 +1,6 @@
 #include <aslam/CameraGeometryDesignVariableContainer.hpp>
-#include <aslam/ReprojectionError.hpp>
-#include <aslam/ScalarExpressionNodeKeypointTime.hpp>
+#include <aslam/backend/ReprojectionError.hpp>
+#include <aslam/backend/ScalarExpressionNodeKeypointTime.hpp>
 #include <sm/logging.hpp>
 
 /// \remarks This file is neither in use nor compiled.
