@@ -85,7 +85,17 @@ if(BUILD_TESTING)
     GTest::Main
     pthread
     ${PROJECT_NAME}
-  )
+    aslam_backend
+    sparse_block_matrix
+    sm_common
+    sm_eigen
+    sm_logging
+    sm_random
+    sm_timing
+    sm_property_tree
+    ${SUITESPARSE_LIBRARIES}
+    fmt::fmt
+    )
   add_test(NAME ${PROJECT_NAME}_test COMMAND ${PROJECT_NAME}_test)
 endif()
 

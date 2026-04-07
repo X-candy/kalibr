@@ -25,12 +25,10 @@
 #include <algorithm>
 
 #ifndef NO_SUITESPARSE
-#include <cholmod.h>
+#include <suitesparse/cholmod.h>
 #endif
 
 namespace sparse_block_matrix {
-
-
 
 namespace {
   struct TripletEntry
@@ -47,8 +45,6 @@ namespace {
     }
   };
 }
-
-
 
   /**
    * write an array to a file, debugging

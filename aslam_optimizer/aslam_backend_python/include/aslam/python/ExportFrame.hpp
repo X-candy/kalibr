@@ -12,25 +12,20 @@
 
 namespace aslam {
   namespace python {
-    
-    
 
-    template<int D,typename DESCRIPTOR_T>
-    void exportKeypoint(const std::string & descriptorName)
+
+    template<int D>
+    void exportKeypoint(const std::string & name)
     {
       using namespace boost::python;
       using namespace aslam;
-      
-      typedef aslam::Keypoint<D,DESCRIPTOR_T> keypoint_t;
-      typedef DESCRIPTOR_T descriptor_t;
+
+      typedef aslam::Keypoint<D> keypoint_t;
 
       std::stringstream str;
-      str << "Keypoint" << D << descriptorName;
+      str << "Keypoint" << D << name;
 
-      void (keypoint_t::*setDescriptor)(const descriptor_t & ) = &keypoint_t::setDescriptor;
-	  const descriptor_t & (keypoint_t::*getDescriptor)() const  = &keypoint_t::descriptor;
-      
-      class_<keypoint_t, bases<KeypointBase> >( str.str().c_str(), init<>() )	
+      class_<keypoint_t, bases<KeypointBase> >( str.str().c_str(), init<>() )
 	// 	    const measurement_t & measurement() const;
 	.def("measurement",&keypoint_t::measurement,return_value_policy<copy_const_reference>())
 	// const measurement_t & y() const;
@@ -43,28 +38,22 @@ namespace aslam {
 	.def("invR",&keypoint_t::invR,return_value_policy<copy_const_reference>())
 	// void setInverseCovariance(const inverse_covariance_t & invR);
 	.def("setInverseCovariance",&keypoint_t::setInverseCovariance)
-	// const descriptor_t & descriptor() const;
-	.def("descriptor",getDescriptor,return_value_policy<copy_const_reference>())
-	// void setDescriptor(const descriptor_t & descriptor);
-	.def("setDescriptor",setDescriptor)
-	// void setDescriptor(const unsigned char * descriptorData);
-
 	;
 
     }
 
-    template<typename CAMERA_GEOMETRY_T, typename DESCRIPTOR_T>
+
+    template<typename CAMERA_GEOMETRY_T>
     void exportReprojectionError(const std::string & name)
     {
       using namespace boost::python;
       using namespace aslam;
       using namespace aslam::backend;
       typedef CAMERA_GEOMETRY_T geometry_t;
-      typedef DESCRIPTOR_T descriptor_t;
-      typedef Frame<geometry_t, descriptor_t> frame_t;
+      typedef Frame<geometry_t> frame_t;
       typedef typename frame_t::keypoint_t keypoint_t;
 
-      class_< ReprojectionError<frame_t>, boost::shared_ptr<ReprojectionError<frame_t> >, bases< ErrorTerm > >( name.c_str(),
+      class_< ReprojectionError<geometry_t>, boost::shared_ptr<ReprojectionError<geometry_t> >, bases< ErrorTerm > >( name.c_str(),
     		  init<const frame_t * , int ,HomogeneousExpression, CameraDesignVariable<geometry_t> >( (name + "( frame, keypointIndex, homogeneousPointExpression, CameraDesignVariable)").c_str()) )
 			;
 
@@ -75,15 +64,14 @@ namespace aslam {
     }
 
 
-    template<typename CAMERA_GEOMETRY_T, typename DESCRIPTOR_T>
+    template<typename CAMERA_GEOMETRY_T>
     void exportCovarianceReprojectionError(const std::string & name)
     {
       using namespace boost::python;
       using namespace aslam;
       using namespace aslam::backend;
       typedef CAMERA_GEOMETRY_T geometry_t;
-      typedef DESCRIPTOR_T descriptor_t;
-      typedef Frame<geometry_t, descriptor_t> frame_t;
+      typedef Frame<geometry_t> frame_t;
       typedef typename frame_t::keypoint_t keypoint_t;
 
       class_< CovarianceReprojectionError<frame_t>, boost::shared_ptr<CovarianceReprojectionError<frame_t> >, bases< ErrorTerm > >( name.c_str(),
@@ -96,34 +84,32 @@ namespace aslam {
     }
 
     // // export the optimizable intrinsics reprojection error:
-    // template<typename CAMERA_GEOMETRY_T, typename DESCRIPTOR_T>
+    // template<typename CAMERA_GEOMETRY_T>
 	// void exportReprojectionIntrinsicsError(const std::string & name)
 	// {
 	//   using namespace boost::python;
 	//   using namespace aslam;
 	//   using namespace aslam::backend;
 	//   typedef CAMERA_GEOMETRY_T geometry_t;
-	//   typedef DESCRIPTOR_T descriptor_t;
-	//   typedef Frame<geometry_t, descriptor_t> frame_t;
+	//   typedef Frame<geometry_t> frame_t;
 	//   typedef typename frame_t::keypoint_t keypoint_t;
-
+	//
 	//   class_< ReprojectionIntrinsicsError<frame_t>, boost::shared_ptr<ReprojectionIntrinsicsError<frame_t> >, bases< ErrorTerm > >( name.c_str(), init<>() )
 	// .def(init<const frame_t * , int ,HomogeneousExpression >( (name + "( frame, keypointIndex, homogeneousPointExpression)").c_str()));
-
+	//
 	// }
 
-    template<typename CAMERA_GEOMETRY_T, typename DESCRIPTOR_T>
+    template<typename CAMERA_GEOMETRY_T>
     void exportFrame(const std::string & name)
     {
       using namespace boost::python;
       using namespace aslam;
       typedef CAMERA_GEOMETRY_T geometry_t;
-      typedef DESCRIPTOR_T descriptor_t;
-      typedef Frame<geometry_t, descriptor_t> frame_t;
+      typedef Frame<geometry_t> frame_t;
       typedef typename frame_t::keypoint_t keypoint_t;
 
       keypoint_t & (frame_t::*keypoint)(size_t) = &frame_t::keypoint;
-      
+
       void (frame_t::*addKeypointPtr)(const keypoint_t & keypoint) = &frame_t::addKeypoint;
 
       class_< frame_t, boost::shared_ptr<frame_t>, bases<FrameBase> >( name.c_str(), init<>() )
@@ -137,10 +123,9 @@ namespace aslam {
           // void addKeypoints(const keypoint_vector_t & keypoints);
           ;
 
-      exportReprojectionError<geometry_t, descriptor_t>(name + "ReprojectionError");
+      exportReprojectionError<geometry_t>(name + "ReprojectionError");
 
     }
-
 
 
 

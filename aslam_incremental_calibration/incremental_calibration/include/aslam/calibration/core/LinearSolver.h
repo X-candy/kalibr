@@ -29,7 +29,7 @@
 #include <vector>
 #include <string>
 
-#include <cholmod.h>
+#include <suitesparse/cholmod.h>
 
 #include <Eigen/Core>
 

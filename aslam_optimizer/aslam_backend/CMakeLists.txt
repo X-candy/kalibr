@@ -28,10 +28,12 @@ kalibr_find_module(sm_logging REQUIRED)
 # 第三方依赖查找
 find_package(Boost REQUIRED COMPONENTS system thread)
 find_package(Eigen3 REQUIRED)
+find_package(SuiteSparse QUIET)
 
 include_directories(
   include
   ${KALIBR_THIRD_PARTY_INCLUDE_DIRS}
+  ${SUITESPARSE_INCLUDE_DIRS}
 )
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -D__STRICT_ANSI__")
@@ -76,11 +78,15 @@ add_library(${PROJECT_NAME}
 )
 target_link_libraries(${PROJECT_NAME}
   ${Boost_LIBRARIES}
-  ${sparse_block_matrix_LIBRARIES}
+  sparse_block_matrix
   ${sm_common_LIBRARIES}
   ${sm_eigen_LIBRARIES}
   ${sm_logging_LIBRARIES}
+  ${sm_random_LIBRARIES}
+  ${sm_timing_LIBRARIES}
+  ${sm_property_tree_LIBRARIES}
   ${SUITESPARSE_LIBRARIES}
+  fmt::fmt
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -155,6 +161,9 @@ if(BUILD_TESTING)
     GTest::Main
     pthread
     ${PROJECT_NAME}
+    sm_random
+    sm_timing
+    sm_property_tree
   )
   add_test(NAME ${PROJECT_NAME}_test COMMAND ${PROJECT_NAME}_test)
 endif()

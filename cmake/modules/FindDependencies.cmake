@@ -30,6 +30,7 @@ find_package(Python3 REQUIRED COMPONENTS
 
 # 线程库
 find_package(Threads REQUIRED)
+find_package(fmt REQUIRED)
 
 # GTest 查找（可选）
 option(BUILD_TESTING "Build tests" OFF)
@@ -96,6 +97,7 @@ set(KALIBR_THIRD_PARTY_LIBRARIES
   ${OpenCV_LIBRARIES}
   ${Python3_LIBRARIES}
   ${CMAKE_THREAD_LIBS_INIT}
+  fmt::fmt
 )
 
 if(GTest_FOUND)

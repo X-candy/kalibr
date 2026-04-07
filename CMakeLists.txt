@@ -5,6 +5,9 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CXX_EXTENSIONS OFF)
 
+# 全局启用位置无关代码（PIC），这样所有静态库都可以被共享库链接
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 # CMake模块路径
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 
@@ -12,6 +15,26 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+
+# 包含CMake实用函数
+include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
+include(CMakeDependentOption)
+
+# 第三方依赖查找
+find_package(Eigen3 REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system thread regex program_options filesystem date_time serialization)
+find_package(OpenCV REQUIRED)
+find_package(Python3 REQUIRED COMPONENTS Development NumPy)
+find_package(Threads REQUIRED)
+find_package(spdlog REQUIRED)
+
+# 查找 SuiteSparse - 用于稀疏矩阵操作
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/aslam_optimizer/sparse_block_matrix/cmake")
+find_package(SuiteSparse REQUIRED)
+
+# 全局模块 include 路径 - 添加 SuiteSparse 包含目录
+include_directories(${SUITESPARSE_INCLUDE_DIRS})
 
 # 全局模块 include 路径 - 让所有模块都能找到彼此的头文件
 include_directories(
@@ -49,20 +72,8 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/aslam_incremental_calibration/incremental_calibration_python/include
   ${CMAKE_SOURCE_DIR}/aslam_offline_calibration/ethz_apriltag2/include
   ${CMAKE_SOURCE_DIR}/aslam_offline_calibration/kalibr/include
+  ${EIGEN3_INCLUDE_DIRS}
 )
-
-# 包含CMake实用函数
-include(CMakePackageConfigHelpers)
-include(GNUInstallDirs)
-include(CMakeDependentOption)
-
-# 第三方依赖查找
-find_package(Eigen3 REQUIRED)
-find_package(Boost REQUIRED COMPONENTS system thread regex program_options filesystem date_time serialization)
-find_package(OpenCV REQUIRED)
-find_package(Python3 REQUIRED COMPONENTS Development NumPy)
-find_package(Threads REQUIRED)
-find_package(spdlog REQUIRED)
 
 # Schweizer-Messer基础模块 - 按依赖顺序添加
 add_subdirectory(Schweizer-Messer/sm_common)

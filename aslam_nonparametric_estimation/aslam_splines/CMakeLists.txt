@@ -21,7 +21,7 @@ endif()
 kalibr_package(
   LIBRARIES ${PROJECT_NAME}
   INCLUDE_DIRS include
-  DEPENDS Boost bs
+  DEPENDS Boost bsplines aslam_backend aslam_backend_expressions sm_kinematics sparse_block_matrix
 )
 
 include_directories(include)
@@ -39,7 +39,7 @@ add_library(${PROJECT_NAME}
   src/BSplineExpressions.cpp
   src/EuclideanBSplineDesignVariable.cpp
 )
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} ${KALIBR_LIB_LIBRARIES} ${OpenCV_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} ${KALIBR_LIB_LIBRARIES} ${OpenCV_LIBRARIES} bsplines aslam_backend aslam_backend_expressions sm_kinematics sparse_block_matrix)
 
 if(BUILD_TESTING)
   enable_testing()
@@ -58,6 +58,11 @@ if(BUILD_TESTING)
     GTest::Main
     pthread
     ${PROJECT_NAME}
+    bsplines
+    aslam_backend
+    aslam_backend_expressions
+    sm_kinematics
+    sparse_block_matrix
   )
   add_test(NAME ${PROJECT_NAME}_test COMMAND ${PROJECT_NAME}_test)
 endif()

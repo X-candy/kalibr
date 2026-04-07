@@ -84,12 +84,6 @@ add_library(${PROJECT_NAME}
   src/BackProjection.cpp
   src/Landmark.cpp
   src/Image.cpp
-  src/DepthCameraGeometry.cpp
-  src/MaskedCameraGeometry.cpp
-  src/PinholeCameraGeometry.cpp
-  src/SphericalCameraGeometry.cpp
-  src/PinholeRSCameraGeometry.cpp
-  src/OmniCameraGeometry.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -181,6 +175,13 @@ if(BUILD_TESTING)
     GTest::GTest
     GTest::Main
     pthread
+    aslam_time
+    sm_kinematics
+    sm_eigen
+    sm_common
+    sm_logging
+    sm_property_tree
+    fmt::fmt
   )
 
   add_test(NAME ${PROJECT_NAME}-test COMMAND ${PROJECT_NAME}-test)

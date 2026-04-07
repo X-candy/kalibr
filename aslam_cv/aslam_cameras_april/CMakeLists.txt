@@ -59,6 +59,9 @@ add_library(${PROJECT_NAME}
 )
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} ${OpenCV_LIBRARIES})
 
+# 确保库使用位置无关代码（PIC）编译，以便可以被共享库链接
+set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
 # Python绑定
 add_python_export_library(${PROJECT_NAME}_python python/aslam_cameras_april
   src/module.cpp

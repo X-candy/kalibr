@@ -28,7 +28,7 @@
 
 #include <Eigen/Core>
 
-#include <cholmod.h>
+#include <suitesparse/cholmod.h>
 
 namespace aslam {
   namespace backend {

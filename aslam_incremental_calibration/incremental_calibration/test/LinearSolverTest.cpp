@@ -29,8 +29,8 @@
 #include <Eigen/Core>
 #include <Eigen/Dense>
 
-#include <cholmod.h>
-#include <SuiteSparseQR.hpp>
+#include <suitesparse/cholmod.h>
+#include <suitesparse/SuiteSparseQR.hpp>
 
 #include "aslam/calibration/statistics/NormalDistribution.h"
 #include "aslam/calibration/core/LinearSolver.h"

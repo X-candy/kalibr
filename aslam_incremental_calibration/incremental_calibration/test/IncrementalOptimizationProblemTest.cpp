@@ -47,7 +47,7 @@ protected:
     return 0;
   };
   virtual void evaluateJacobiansImplementation(
-    aslam::backend::JacobianContainer& J) {};
+    aslam::backend::JacobianContainer& J) const {};
 };
 
 using namespace aslam::calibration;

@@ -24,8 +24,8 @@
 
 #include <Eigen/Dense>
 
-#include <cholmod.h>
-#include <SuiteSparseQR.hpp>
+#include <suitesparse/cholmod.h>
+#include <suitesparse/SuiteSparseQR.hpp>
 #include <spqr.hpp>
 
 #include "aslam/calibration/exceptions/OutOfBoundException.h"

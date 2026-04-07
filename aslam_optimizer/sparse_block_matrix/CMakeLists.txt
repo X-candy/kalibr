@@ -44,7 +44,7 @@ include(GNUInstallDirs)
 add_library(${PROJECT_NAME}
   src/matrix_structure.cpp
   src/sparse_helper.cpp
-  # src/marginal_covariance_cholesky.cpp - 依赖 SuiteSparse，暂时禁用
+  src/marginal_covariance_cholesky.cpp
 )
 if(SUITESPARSE_FOUND)
   target_link_libraries(${PROJECT_NAME}
@@ -54,6 +54,7 @@ endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<BUILD_INTERFACE:${CHOLMOD_INCLUDE_DIR}>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 

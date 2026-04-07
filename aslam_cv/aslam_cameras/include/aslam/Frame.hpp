@@ -40,6 +40,12 @@ class Frame : public FrameBase {
   /// \brief the type of camera geometry.
   typedef CAMERA_GEOMETRY_T camera_geometry_t;
 
+  // Type definitions for compatibility with CameraDesignVariable
+  typedef typename camera_geometry_t::projection_t projection_t;
+  typedef typename camera_geometry_t::shutter_t shutter_t;
+  typedef typename camera_geometry_t::mask_t mask_t;
+  typedef typename camera_geometry_t::distortion_t distortion_t;
+
   enum {
     /// \brief the dimensionality of the keypoint
     KeypointDimension = camera_geometry_t::KeypointDimension
