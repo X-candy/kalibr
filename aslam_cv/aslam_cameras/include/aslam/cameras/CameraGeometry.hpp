@@ -34,7 +34,7 @@ class CameraGeometry : public CameraGeometryBase {
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   typedef PROJECTION_T projection_t;
   // Not all projections will have a distortion...is this necessary? Maybe.
-  //typedef typename projection_t::distortion_t distortion_t;
+  typedef typename projection_t::distortion_t distortion_t;
   typedef typename projection_t::keypoint_t keypoint_t;
   typedef SHUTTER_T shutter_t;
   typedef MASK_T mask_t;

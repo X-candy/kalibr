@@ -23,7 +23,7 @@
 #include <algorithm>
 #include <iostream>
 
-#include <SuiteSparseQR.hpp>
+#include <suitesparse/SuiteSparseQR.hpp>
 
 #include <sm/PropertyTree.hpp>
 

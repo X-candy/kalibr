@@ -25,12 +25,26 @@
 #include <algorithm>
 
 #ifndef NO_SUITESPARSE
-#include <cholmod.h>
+#include <suitesparse/cholmod.h>
 #endif
 
 namespace sparse_block_matrix {
 
-
+namespace {
+  struct TripletEntry
+  {
+    int r, c;
+    double x;
+    TripletEntry(int r_, int c_, double x_) : r(r_), c(c_), x(x_) {}
+  };
+  struct TripletColSort
+  {
+    bool operator()(const TripletEntry& e1, const TripletEntry& e2) const
+    {
+      return e1.c < e2.c || (e1.c == e2.c && e1.r < e2.r);
+    }
+  };
+}
 
   /**
    * write an array to a file, debugging
@@ -105,5 +119,7 @@ namespace sparse_block_matrix {
 
 
 } // end namespace
+
+#include "implementation/sparse_helper.h"
 
 #endif

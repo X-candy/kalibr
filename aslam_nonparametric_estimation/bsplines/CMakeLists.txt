@@ -43,6 +43,7 @@ add_library(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   ${EIGEN3_LIBRARIES}
   ${sm_common_LIBRARIES}
+  sparse_block_matrix
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

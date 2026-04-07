@@ -32,7 +32,6 @@ kalibr_find_module(sm_python REQUIRED)
 # 第三方依赖查找
 find_package(Boost REQUIRED COMPONENTS thread)
 find_package(Python3 REQUIRED COMPONENTS Development NumPy)
-find_package(Eigen3 REQUIRED)
 
 include_directories(
   include
@@ -40,7 +39,6 @@ include_directories(
   ${Boost_INCLUDE_DIRS}
   ${Python3_INCLUDE_DIRS}
   ${Python3_NumPy_INCLUDE_DIRS}
-  ${EIGEN3_INCLUDE_DIRS}
   ${aslam_backend_INCLUDE_DIRS}
   ${aslam_backend_expressions_INCLUDE_DIRS}
   ${sparse_block_matrix_INCLUDE_DIRS}

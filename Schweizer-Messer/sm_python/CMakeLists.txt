@@ -70,7 +70,6 @@ target_link_libraries(${PY_PROJECT_NAME}
   sm_logging
   sm_matrix_archive
   sm_property_tree
-  python_module
 )
 
 catkin_python_setup()

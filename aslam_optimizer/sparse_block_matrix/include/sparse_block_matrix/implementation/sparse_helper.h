@@ -1,23 +1,25 @@
 // g2o - General Graph Optimization
 // Copyright (C) 2011 R. Kuemmerle, G. Grisetti, W. Burgard
-//
+// 
 // g2o is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published
 // by the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-//
+// 
 // g2o is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-//
+// 
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <sparse_block_matrix/sparse_block_matrix.h>
 
 namespace sparse_block_matrix {
 
+    
+    
+    
     template<typename T>
     bool writeCCSMatrix(const char* filename, int rows, int cols, const T* Ap, const T* Ai, const double* Ax, bool upperTriangleSymmetric)
     {
@@ -34,12 +36,12 @@ namespace sparse_block_matrix {
             }
         }
         sort(entries.begin(), entries.end(), TripletColSort());
-
+        
         string name = filename;
         std::string::size_type lastDot = name.find_last_of('.');
         if (lastDot != std::string::npos)
             name = name.substr(0, lastDot);
-
+        
         std::ofstream fout(filename);
         fout << "# name: " << name << std::endl;
         fout << "# type: sparse matrix" << std::endl;
@@ -54,8 +56,9 @@ namespace sparse_block_matrix {
         }
         return fout.good();
     }
-
-
-
-
+    
+    
+    
+    
 } // end namespace
+

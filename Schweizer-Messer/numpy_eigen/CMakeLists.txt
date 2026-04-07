@@ -16,7 +16,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/modules/PythonBindingHelpers.cmake)
 find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED COMPONENTS python)
 
-include_directories(include)
+include_directories(include ${EIGEN3_INCLUDE_DIRS})
 
 add_definitions(${EIGEN_DEFINITIONS})
 include_directories("${PROJECT_SOURCE_DIR}/include/numpy_eigen")
@@ -46,25 +46,10 @@ target_link_libraries(${PROJECT_NAME}
   Eigen3::Eigen
 )
 
-# 公开Eigen3的包含目录给依赖此库的模块
-target_include_directories(${PROJECT_NAME} PUBLIC
-  $<BUILD_INTERFACE:${EIGEN3_INCLUDE_DIRS}>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-)
-
 INCLUDE(src/autogen_test_files.cmake)
 add_python_export_library(${PROJECT_NAME}_test
       ${PROJECT_SOURCE_DIR}/python/${PROJECT_NAME} ${AUTOGEN_TEST_FILES}
   )
-target_link_libraries(${PROJECT_NAME}_test
-  ${Boost_LIBRARIES}
-  Python3::Python
-  Python3::NumPy
-  Eigen3::Eigen
-)
-target_include_directories(${PROJECT_NAME}_test PUBLIC
-  $<BUILD_INTERFACE:${EIGEN3_INCLUDE_DIRS}>
-)
 
 #############
 ## Testing ##

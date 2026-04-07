@@ -95,3 +95,60 @@ install(TARGETS ${PROJECT_NAME}_errorterms
 
 install(DIRECTORY include/
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+##################
+## Testing
+##################
+if(BUILD_TESTING)
+  find_package(GTest REQUIRED)
+
+  # 测试1: IMU误差项测试
+  add_executable(kalibr_test
+    test/test_main.cpp
+    test/TestErrorTerms.cpp
+  )
+  target_link_libraries(kalibr_test
+    GTest::GTest
+    GTest::Main
+    pthread
+    kalibr_errorterms
+    aslam_backend
+    aslam_backend_expressions
+    sm_kinematics
+    sm_eigen
+    sm_common
+    sm_logging
+    ${Boost_LIBRARIES}
+  )
+  add_test(NAME kalibr_test COMMAND kalibr_test)
+
+  # 测试2: 相机标定测试
+  add_executable(kalibr_camera_calibration_test
+    test/test_main.cpp
+    test/TestCameraCalibration.cpp
+  )
+  target_link_libraries(kalibr_camera_calibration_test
+    GTest::GTest
+    GTest::Main
+    pthread
+    kalibr_errorterms
+    aslam_backend
+    aslam_backend_expressions
+    aslam_cameras
+    aslam_time
+    aslam_imgproc
+    aslam_cv_backend
+    sm_kinematics
+    sm_eigen
+    sm_common
+    sm_logging
+    sm_property_tree
+    sm_opencv
+    sm_timing
+    sparse_block_matrix
+    fmt::fmt
+    ${Boost_LIBRARIES}
+    ${OpenCV_LIBRARIES}
+  )
+  add_test(NAME kalibr_camera_calibration_test COMMAND kalibr_camera_calibration_test)
+endif()

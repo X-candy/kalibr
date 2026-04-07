@@ -4,6 +4,8 @@ project(aslam_cameras VERSION 0.0.1)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+ADD_DEFINITIONS(-DASLAM_USE_ROS)
+
 # 包含CMake模块
 if(EXISTS ${CMAKE_SOURCE_DIR}/cmake/modules/CatkinReplacements.cmake)
   include(${CMAKE_SOURCE_DIR}/cmake/modules/CatkinReplacements.cmake)
@@ -173,6 +175,13 @@ if(BUILD_TESTING)
     GTest::GTest
     GTest::Main
     pthread
+    aslam_time
+    sm_kinematics
+    sm_eigen
+    sm_common
+    sm_logging
+    sm_property_tree
+    fmt::fmt
   )
 
   add_test(NAME ${PROJECT_NAME}-test COMMAND ${PROJECT_NAME}-test)

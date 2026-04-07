@@ -78,19 +78,21 @@ double BSplineMotionError<SPLINE_T>::evaluateErrorImplementation() {
   //  std::cout << Qc->rows() << ":" << Qc->cols() << std::endl;
   _Q.multiply(&Qc, c);
 
-  _error = c.transpose() * (Qc);
-  return _error[0];
+  error_t error_val;
+  error_val[0] = c.transpose() * (Qc);
+  setError(error_val);
+  return error_val[0];
 }
 
 /// \brief evaluate the jacobians
 template<class SPLINE_T>
-void BSplineMotionError<SPLINE_T>::evaluateJacobiansImplementation() const {
+void BSplineMotionError<SPLINE_T>::evaluateJacobiansImplementation(JacobianContainer & outJacobians) const {
 
 }
 
 template<class SPLINE_T>
 void BSplineMotionError<SPLINE_T>::buildHessianImplementation(
-    SparseBlockMatrix & outHessian, Eigen::VectorXd & outRhs) {
+    SparseBlockMatrix & outHessian, Eigen::VectorXd & outRhs, bool useMEstimator) {
 
   // get the coefficients:
   Eigen::MatrixXd coeff = _splineDV->spline().coefficients();

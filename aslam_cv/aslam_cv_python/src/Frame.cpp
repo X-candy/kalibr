@@ -193,9 +193,9 @@ void exportFrame() {
   aslam::python::exportFrame<MaskedDistortedOmniCameraGeometry>(
       "MaskedDistortedOmniFrame");
 
-  aslam::python::exportKeypoint<2>();
-  aslam::python::exportKeypoint<3>();
-  aslam::python::exportKeypoint<4>();
+  aslam::python::exportKeypoint<2>("");
+  aslam::python::exportKeypoint<3>("");
+  aslam::python::exportKeypoint<4>("");
 
   class_ < KeypointIdentifier
       > ("KeypointIdentifier", init<>()).def(
